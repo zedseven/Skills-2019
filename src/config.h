@@ -1,3 +1,5 @@
+#pragma once
+
 //Motor Ports
 #define LEFT_MOTOR_PORT 1
 #define RIGHT_MOTOR_PORT 2
@@ -7,6 +9,10 @@
 #define LAMP_PORT 10
 #define BLOCK_VISION_PORT 5
 #define FLOOR_VISION_PORT 6
+#define SONAR_L_PORT_IN 1
+#define SONAR_L_PORT_OUT 2
+#define SONAR_R_PORT_IN 3
+#define SONAR_R_PORT_OUT 4
 
 //Vision Sensor Signature Constants
 #define SIG_BLUE_BLOCK 0
@@ -18,13 +24,13 @@
 #define SIG_NULL 6
 
 //Constants
-#define WIDTH_TO_DIST 7.81705;
-#define CM_TO_MOTOR_DEG 16.4245;
-#define ROBOT_TO_MOTOR_DEG 3.5114;//3.5097;//3.508457;
-#define BRAIN_SCREEN_WIDTH 480;
-#define BRAIN_SCREEN_HEIGHT 272;
-#define VISION_WIDTH 304;
-#define VISION_HEIGHT 208;
+#define WIDTH_TO_DIST 7.81705
+#define CM_TO_MOTOR_DEG 16.4245
+#define ROBOT_TO_MOTOR_DEG 3.5114//3.5097;//3.508457;
+#define BRAIN_SCREEN_WIDTH 480
+#define BRAIN_SCREEN_HEIGHT 272
+#define VISION_WIDTH 304
+#define VISION_HEIGHT 208
 enum class BlockType { None, Blue, Yellow, Red };
 enum class MovementType { None, Left, Right, Forward, Backward };
 
@@ -45,7 +51,7 @@ enum class MovementType { None, Left, Right, Forward, Backward };
 #define MOVE_SENSITIVITY 1
 #define DROPOFF_MIN 110
 #define DROPOFF_MAX 150
-#define CLAW_CLOSE_DEG = -190;//-170;//-155; //degrees
+#define CLAW_CLOSE_DEG -190//-170;//-155; //degrees
 #define CLAW_MOVE_SPEED 40
 #define LAMP_ON_SPEED 100
 #define REALIGN_SENSITIVITY 0.1

@@ -8,6 +8,7 @@
 
 void autonomous()
 {
-  LeftMotor.move_relative(1000, 100);
-  RightMotor.move_relative(1000, 100);
+  move(30);
+  rotate(90);
+  move(60);
 }

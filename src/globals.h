@@ -1,6 +1,11 @@
+#pragma once
+
 #include "main.h"
 #include "config.h"
 #include "okapi/api.hpp"
+#include "api.h"
+#include "pros/adi.hpp"
+#include "pros/api_legacy.h"
 
 //Motors and Sensors
 extern pros::Motor LeftMotor;
@@ -11,9 +16,12 @@ extern pros::Motor ArmMotorR;
 extern pros::Motor Lamp;
 extern pros::Vision BlockVision;
 extern pros::Vision FloorVision;
+extern Ultrasonic SonarL;
+extern Ultrasonic SonarR;
 
 //Utility Variables
 extern okapi::Rate rate;
+extern okapi::Timer timer;
 
 //Runtime Variables
 extern BlockType targetBlock;

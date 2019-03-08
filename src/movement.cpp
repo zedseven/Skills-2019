@@ -3,6 +3,9 @@
 #include "globals.h"
 #include "movement.h"
 #include "okapi/api.hpp"
+#include "api.h"
+#include "pros/adi.hpp"
+#include "pros/api_legacy.h"
 
 using namespace std;
 using namespace okapi;
@@ -28,6 +31,40 @@ void initMotors()
   ArmMotorL.move_absolute(0, 30);
   ArmMotorR.move_absolute(0, 30);
 }
+void await1Motor(pros::Motor motor, double target, double sensitivity, double timeout)
+{
+  timer.placeMark();
+  while(fabs(motor.get_position() - target) > sensitivity && (timeout < 0 || timer.getDtFromMark().convert(millisecond) < timeout))
+    rate.delayUntil(50);
+  timer.clearMark();
+}
+void await2Motors(pros::Motor motor1, pros::Motor motor2, double target1, double target2, double sensitivity1, double sensitivity2, double timeout)
+{
+  timer.placeMark();
+  while((fabs(motor1.get_position() - target1) > sensitivity1 || fabs(motor2.get_position() - target2) > sensitivity2) && (timeout < 0 || timer.getDtFromMark().convert(millisecond) < timeout))
+    rate.delayUntil(50);
+  timer.clearMark();
+}
+void await2Motors(pros::Motor motor1, pros::Motor motor2, double target1, double target2, double sensitivity, double timeout)
+{
+  await2Motors(motor1, motor2, target1, target2, sensitivity, sensitivity, timeout);
+}
+void await2Motors(pros::Motor motor1, pros::Motor motor2, double target, double sensitivity, double timeout)
+{
+  await2Motors(motor1, motor2, target, target, sensitivity, timeout);
+}
+void spinMotorUntilTimeout(pros::Motor motor, double speed, double timeout)
+{
+  timer.placeMark();
+  motor.move_velocity(speed);
+  while(!motor.is_stopped() && (timeout < 0 || timer.getDtFromMark().convert(millisecond) < timeout))
+    rate.delayUntil(50);
+  timer.clearMark();
+}
+void spinMotorUntilTimeout(pros::Motor motor, double speed)
+{
+  spinMotorUntilTimeout(motor, speed, -1);
+}
 void moveDeg(double moveDegs, double moveSpeed) //distance in cm
 {
   double leftStartDeg = LeftMotor.get_position();
@@ -51,89 +88,89 @@ void move(double distance) //distance in cm
 }
 void rotateDeg(double moveDeg)
 {
-  double leftStartDeg = LeftMotor.rotation(rotationUnits::deg);
-  double rightStartDeg = RightMotor.rotation(rotationUnits::deg);
-  LeftMotor.startRotateFor(moveDeg, rotationUnits::deg, movementSpeed, velocityUnits::rpm);
-  RightMotor.startRotateFor(-moveDeg, rotationUnits::deg, -movementSpeed, velocityUnits::rpm);
-  while(abs(abs(LeftMotor.rotation(rotationUnits::deg) - leftStartDeg) - abs(moveDeg)) > moveBand || abs(abs(RightMotor.rotation(rotationUnits::deg) - rightStartDeg) - abs(moveDeg)) > moveBand)
-      vex::task::sleep(50);
+  double leftStartDeg = LeftMotor.get_position();
+  double rightStartDeg = RightMotor.get_position();
+  LeftMotor.move_relative(moveDeg, MOVEMENT_SPEED);
+  RightMotor.move_relative(-moveDeg, MOVEMENT_SPEED);
+  while(abs(abs(LeftMotor.get_position() - leftStartDeg) - abs(moveDeg)) > MOVE_SENSITIVITY || abs(abs(RightMotor.get_position() - rightStartDeg) - abs(moveDeg)) > MOVE_SENSITIVITY)
+    rate.delayUntil(50);
 }
 void rotate(double rotationDeg)
 {
-  rotateDeg(rotationDeg * robotDegToMotorDeg);
+  rotateDeg(rotationDeg * ROBOT_TO_MOTOR_DEG);
 }
 void realign()
 {
   double rBand;
   while(true)
   {
-      vex::task::sleep(100);
-      double lDist = -1.0;
-      double rDist = -1.0;
-      while(/*true || */lDist < 0.0 || rDist < 0.0)
+    rate.delayUntil(100);
+    double lDist = -1.0;
+    double rDist = -1.0;
+    while(/*true || */lDist < 0.0 || rDist < 0.0)
+    {
+      lDist = pros::c::ultrasonicGet(SonarL);
+      rDist = pros::c::ultrasonicGet(SonarR);
+      //Brain.Screen.printAt(100, 100, "L: %f", lDist);
+      //Brain.Screen.printAt(100, 200, "R: %f", rDist);
+    }
+    rBand = fmax(0.2, (((lDist + rDist) / 2.0) / REALIGN_DIST) * 0.125 + REALIGN_SENSITIVITY);
+    //Brain.Screen.printAt(100, 220, "rBand: %f", rBand);
+    double distDiff = rDist - lDist;
+    if(distDiff > rBand) //Right is further away - turn left
+    {
+      LeftMotor.move_velocity(-REALIGN_SPEED);
+      RightMotor.move_velocity(REALIGN_SPEED);
+    }
+    else if(distDiff < -rBand) //Left is further away - turn right
+    {
+      LeftMotor.move_velocity(REALIGN_SPEED);
+      RightMotor.move_velocity(-REALIGN_SPEED);
+    }
+    else
+    {
+      resetMotors();
+      bool done = true;
+      for(int j = 0; j < 5; j++)
       {
-          lDist = SonarL.distance(distanceUnits::cm);
-          rDist = SonarR.distance(distanceUnits::cm);
-          Brain.Screen.printAt(100, 100, "L: %f", lDist);
-          Brain.Screen.printAt(100, 200, "R: %f", rDist);
-      }
-      rBand = fmax(0.2, (((lDist + rDist) / 2.0) / realignDist) * 0.125 + realignBand);
-      Brain.Screen.printAt(100, 220, "rBand: %f", rBand);
-      double distDiff = rDist - lDist;
-      if(distDiff > rBand) //Right is further away - turn left
-      {
-          LeftMotor.spin(directionType::rev, realignSpeed, velocityUnits::rpm);
-          RightMotor.spin(directionType::fwd, realignSpeed, velocityUnits::rpm);
-      }
-      else if(distDiff < -rBand) //Left is further away - turn right
-      {
-          LeftMotor.spin(directionType::fwd, realignSpeed, velocityUnits::rpm);
-          RightMotor.spin(directionType::rev, realignSpeed, velocityUnits::rpm);
-      }
-      else
-      {
-          resetMotors();
-          bool done = true;
-          for(int j = 0; j < 5; j++)
+        if(!done)
+          break;
+        //Brain.Screen.printAt(100, 150, "Main check #%d", j + 1);
+        /*Brain.Screen.printAt(200, 100, "L: %f", SonarL.distance(distanceUnits::cm));
+        Brain.Screen.printAt(200, 200, "R: %f", SonarR.distance(distanceUnits::cm));
+        vex::task::sleep(1000);
+        Brain.Screen.printAt(200, 100, "L: %f", SonarL.distance(distanceUnits::cm));
+        Brain.Screen.printAt(200, 200, "R: %f", SonarR.distance(distanceUnits::cm));
+        vex::task::sleep(1000);
+        Brain.Screen.printAt(200, 100, "L: %f", SonarL.distance(distanceUnits::cm));
+        Brain.Screen.printAt(200, 200, "R: %f", SonarR.distance(distanceUnits::cm));*/
+        double lDistN = -1.0;
+        double rDistN = -1.0;
+        for(int i = 0; i < 10; i++)
+        {
+          lDistN = -1.0;
+          rDistN = -1.0;
+          while(/*true || */lDistN < 0.0 || rDistN < 0.0)
           {
-              if(!done)
-                  break;
-              Brain.Screen.printAt(100, 150, "Main check #%d", j + 1);
-              /*Brain.Screen.printAt(200, 100, "L: %f", SonarL.distance(distanceUnits::cm));
-              Brain.Screen.printAt(200, 200, "R: %f", SonarR.distance(distanceUnits::cm));
-              vex::task::sleep(1000);
-              Brain.Screen.printAt(200, 100, "L: %f", SonarL.distance(distanceUnits::cm));
-              Brain.Screen.printAt(200, 200, "R: %f", SonarR.distance(distanceUnits::cm));
-              vex::task::sleep(1000);
-              Brain.Screen.printAt(200, 100, "L: %f", SonarL.distance(distanceUnits::cm));
-              Brain.Screen.printAt(200, 200, "R: %f", SonarR.distance(distanceUnits::cm));*/
-              double lDistN = -1.0;
-              double rDistN = -1.0;
-              for(int i = 0; i < 10; i++)
-              {
-                  lDistN = -1.0;
-                  rDistN = -1.0;
-                  while(/*true || */lDistN < 0.0 || rDistN < 0.0)
-                  {
-                      lDistN = SonarL.distance(distanceUnits::cm);
-                      rDistN = SonarR.distance(distanceUnits::cm);
-                      Brain.Screen.printAt(100, 100, "L: %f", lDistN);
-                      Brain.Screen.printAt(100, 200, "R: %f", rDistN);
-                  }
-                  if(fabs(rDistN - lDistN) > rBand /*|| fabs(lDist - lDistN) > realignBand || fabs(rDist - rDistN) > realignBand*/)
-                  {
-                      done = false;
-                      break;
-                  }
-                  else
-                  {
-                      vex::task::sleep(50);
-                  }
-              }
+            lDistN = pros::c::ultrasonicGet(SonarL);
+            rDistN = pros::c::ultrasonicGet(SonarR);
+            //Brain.Screen.printAt(100, 100, "L: %f", lDistN);
+            //Brain.Screen.printAt(100, 200, "R: %f", rDistN);
           }
-          if(done)
-              break;
+          if(fabs(rDistN - lDistN) > rBand /*|| fabs(lDist - lDistN) > realignBand || fabs(rDist - rDistN) > realignBand*/)
+          {
+            done = false;
+            break;
+          }
+          else
+          {
+            rate.delayUntil(50);
+          }
+        }
       }
+      if(done)
+        break;
+    }
   }
 }
 void moveUntilDist(double targetDist, double moveIncrement)
@@ -144,69 +181,63 @@ void moveUntilDist(double targetDist, double moveIncrement)
   double measureDist;
   while(true)
   {
-      lDist = -1.0;
-      rDist = -1.0;
-      while(/*true || */lDist < 0.0 || rDist < 0.0)
-      {
-          lDist = SonarL.distance(distanceUnits::cm);
-          rDist = SonarR.distance(distanceUnits::cm);
-      }
-      measureDist = (lDist + rDist) / 2.0;
-      distDiff = measureDist - targetDist;
-      realign();
-      if(distDiff > moveUntilBand)
-          move(fmin(measureDist - targetDist, moveIncrement));
-      else if(distDiff < -moveUntilBand)
-          move(-fmin(targetDist - measureDist, moveIncrement));
-      else
-          break;
+    lDist = -1.0;
+    rDist = -1.0;
+    while(/*true || */lDist < 0.0 || rDist < 0.0)
+    {
+      lDist = pros::c::ultrasonicGet(SonarL);
+      rDist = pros::c::ultrasonicGet(SonarR);
+    }
+    measureDist = (lDist + rDist) / 2.0;
+    distDiff = measureDist - targetDist;
+    realign();
+    if(distDiff > MOVE_UNTIL_SENSITIVITY)
+      move(fmin(measureDist - targetDist, moveIncrement));
+    else if(distDiff < -MOVE_UNTIL_SENSITIVITY)
+      move(-fmin(targetDist - measureDist, moveIncrement));
+    else
+      break;
   }
-  Brain.Screen.printAt(50, 120, "Done moving.");
+  //Brain.Screen.printAt(50, 120, "Done moving.");
   realign();
 }
 void closeClawOnBlock()
 {
-  ClawMotor.setTimeout(1500, timeUnits::msec);
-  ClawMotor.setStopping(brakeType::hold);
-  ClawMotor.rotateTo(clawCloseDeg, rotationUnits::deg, clawMoveSpeed, velocityUnits::rpm);
+  ClawMotor.set_brake_mode(MOTOR_BRAKE_HOLD);//setTimeout(1500, timeUnits::msec);
+  ClawMotor.move_absolute(CLAW_CLOSE_DEG, CLAW_MOVE_SPEED);
+  await1Motor(ClawMotor, CLAW_CLOSE_DEG, 1, 1500);
 }
 void openClaw()
 {
-  //ClawMotor.setTimeout(3000, timeUnits::msec);
-  ClawMotor.rotateFor(2, timeUnits::sec, clawMoveSpeed, velocityUnits::rpm);
-  //ClawMotor.rotateTo(0, rotationUnits::deg, clawMoveSpeed, velocityUnits::rpm);
-  ClawMotor.resetRotation();
-  ClawMotor.setStopping(brakeType::hold);
+  spinMotorUntilTimeout(ClawMotor, CLAW_MOVE_SPEED, 2000);
+  ClawMotor.tare_position();
+  ClawMotor.set_brake_mode(MOTOR_BRAKE_HOLD);
 }
 void pickupBlock()
 {
   //Assuming claw is open
-  ArmMotorL.startRotateTo(armPickupDeg, rotationUnits::deg, armPickupSpeed, velocityUnits::rpm);
-  ArmMotorR.startRotateTo(armPickupDeg, rotationUnits::deg, armPickupSpeed, velocityUnits::rpm);
+  ArmMotorL.move_absolute(ARM_PICKUP_DEG, ARM_PICKUP_SPEED);
+  ArmMotorR.move_absolute(ARM_PICKUP_DEG, ARM_PICKUP_SPEED);
   //Wait until the arms have been lowered
-  while(abs(ArmMotorL.rotation(rotationUnits::deg) - armPickupDeg) > armPickupBand || abs(ArmMotorR.rotation(rotationUnits::deg) - armPickupDeg) > armPickupBand)
-    vex::task::sleep(50);
+  await2Motors(ArmMotorL, ArmMotorR, ARM_PICKUP_DEG, ARM_PICKUP_SENSITIVITY, 4000);
   closeClawOnBlock();
-  ArmMotorL.startRotateTo(0, rotationUnits::deg, armPickupSpeed, velocityUnits::rpm);
-  ArmMotorR.startRotateTo(0, rotationUnits::deg, armPickupSpeed, velocityUnits::rpm);
+  ArmMotorL.move_absolute(0, ARM_PICKUP_SPEED);
+  ArmMotorR.move_absolute(0, ARM_PICKUP_SPEED);
   //Wait until the arms have been raised
-  while(abs(ArmMotorL.rotation(rotationUnits::deg)) > armPickupBand || abs(ArmMotorR.rotation(rotationUnits::deg)) > armPickupBand)
-    vex::task::sleep(50);
+  await2Motors(ArmMotorL, ArmMotorR, 0, ARM_PICKUP_SENSITIVITY, 4000);
   holdingBlock = true;
 }
 void dropoffBlock()
 {
   //Assuming claw is closed
-  ArmMotorL.startRotateTo(armDropoffDeg, rotationUnits::deg, armPickupSpeed, velocityUnits::rpm);
-  ArmMotorR.startRotateTo(armDropoffDeg, rotationUnits::deg, armPickupSpeed, velocityUnits::rpm);
+  ArmMotorL.move_absolute(ARM_DROPOFF_DEG, ARM_PICKUP_SPEED);
+  ArmMotorR.move_absolute(ARM_DROPOFF_DEG, ARM_PICKUP_SPEED);
   //Wait until the arms have been lowered
-  while(abs(ArmMotorL.rotation(rotationUnits::deg) - armDropoffDeg) > armPickupBand || abs(ArmMotorR.rotation(rotationUnits::deg) - armDropoffDeg) > armPickupBand)
-    vex::task::sleep(50);
+  await2Motors(ArmMotorL, ArmMotorR, ARM_DROPOFF_DEG, ARM_PICKUP_SENSITIVITY, 4000);
   openClaw();
-  ArmMotorL.startRotateTo(0, rotationUnits::deg, armPickupSpeed, velocityUnits::rpm);
-  ArmMotorR.startRotateTo(0, rotationUnits::deg, armPickupSpeed, velocityUnits::rpm);
+  ArmMotorL.move_absolute(0, ARM_PICKUP_SPEED);
+  ArmMotorR.move_absolute(0, ARM_PICKUP_SPEED);
   //Wait until the arms have been raised
-  while(abs(ArmMotorL.rotation(rotationUnits::deg)) > armPickupBand || abs(ArmMotorR.rotation(rotationUnits::deg)) > armPickupBand)
-    vex::task::sleep(50);
+  await2Motors(ArmMotorL, ArmMotorR, 0, ARM_PICKUP_SENSITIVITY, 4000);
   holdingBlock = false;
 }
