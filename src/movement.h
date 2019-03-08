@@ -1,9 +1,1 @@
 //Robot Port Constants
-#define LEFT_MOTOR_PORT 1
-#define RIGHT_MOTOR_PORT 2
-#define CLAW_MOTOR_PORT 3
-#define ARM_LEFT_PORT 20
-#define ARM_RIGHT_PORT 11
-#define LAMP_PORT 10
-#define BLOCK_VISION_PORT 5
-#define FLOOR_VISION_PORT 6
