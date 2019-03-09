@@ -35,14 +35,21 @@ void await1Motor(pros::Motor motor, double target, double sensitivity, double ti
 {
   timer.placeMark();
   while(fabs(motor.get_position() - target) > sensitivity && (timeout < 0 || timer.getDtFromMark().convert(millisecond) < timeout))
-    rate.delayUntil(50);
+    pros::delay(50);
+  timer.clearMark();
+}
+void await2Motors(pros::Motor motor1, pros::Motor motor2, double start1, double start2, double target1, double target2, double sensitivity1, double sensitivity2, double timeout)
+{
+  timer.placeMark();
+  while((fabs(fabs(motor1.get_position() - start1) - fabs(target1)) > sensitivity1 || fabs(fabs(motor2.get_position() - start2) - fabs(target2)) > sensitivity2) && (timeout < 0 || timer.getDtFromMark().convert(millisecond) < timeout))
+    pros::delay(50);
   timer.clearMark();
 }
 void await2Motors(pros::Motor motor1, pros::Motor motor2, double target1, double target2, double sensitivity1, double sensitivity2, double timeout)
 {
   timer.placeMark();
   while((fabs(motor1.get_position() - target1) > sensitivity1 || fabs(motor2.get_position() - target2) > sensitivity2) && (timeout < 0 || timer.getDtFromMark().convert(millisecond) < timeout))
-    rate.delayUntil(50);
+    pros::delay(50);
   timer.clearMark();
 }
 void await2Motors(pros::Motor motor1, pros::Motor motor2, double target1, double target2, double sensitivity, double timeout)
@@ -57,8 +64,14 @@ void spinMotorUntilTimeout(pros::Motor motor, double speed, double timeout)
 {
   timer.placeMark();
   motor.move_velocity(speed);
+  pros::delay(100);
+  printf("getDtFromMark: %f\n", timer.getDtFromMark().convert(millisecond));
+  printf("motor.is_stopped: %d\n", motor.is_stopped() ? 1 : 0);
   while(!motor.is_stopped() && (timeout < 0 || timer.getDtFromMark().convert(millisecond) < timeout))
-    rate.delayUntil(50);
+  {
+    printf("getDtFromMark: %f\n", timer.getDtFromMark().convert(millisecond));
+    pros::delay(50);
+  }
   timer.clearMark();
 }
 void spinMotorUntilTimeout(pros::Motor motor, double speed)
@@ -71,8 +84,9 @@ void moveDeg(double moveDegs, double moveSpeed) //distance in cm
   double rightStartDeg = RightMotor.get_position();
   LeftMotor.move_relative(moveDegs, moveSpeed);
   RightMotor.move_relative(moveDegs, moveSpeed);
-  while(abs(abs(LeftMotor.get_position() - leftStartDeg) - abs(moveDegs)) > MOVE_SENSITIVITY || abs(abs(RightMotor.get_position() - rightStartDeg) - abs(moveDegs)) > MOVE_SENSITIVITY)
-    rate.delayUntil(50);
+  //while(abs(abs(LeftMotor.get_position() - leftStartDeg) - abs(moveDegs)) > MOVE_SENSITIVITY || abs(abs(RightMotor.get_position() - rightStartDeg) - abs(moveDegs)) > MOVE_SENSITIVITY)
+  //  pros::delay(50);
+  await2Motors(LeftMotor, RightMotor, leftStartDeg, rightStartDeg, moveDegs, moveDegs, MOVE_SENSITIVITY, MOVE_SENSITIVITY, -1);
 }
 void moveDeg(double moveDegs)
 {
@@ -92,8 +106,9 @@ void rotateDeg(double moveDeg)
   double rightStartDeg = RightMotor.get_position();
   LeftMotor.move_relative(moveDeg, MOVEMENT_SPEED);
   RightMotor.move_relative(-moveDeg, MOVEMENT_SPEED);
-  while(abs(abs(LeftMotor.get_position() - leftStartDeg) - abs(moveDeg)) > MOVE_SENSITIVITY || abs(abs(RightMotor.get_position() - rightStartDeg) - abs(moveDeg)) > MOVE_SENSITIVITY)
-    rate.delayUntil(50);
+  //while(abs(abs(LeftMotor.get_position() - leftStartDeg) - abs(moveDeg)) > MOVE_SENSITIVITY || abs(abs(RightMotor.get_position() - rightStartDeg) - abs(moveDeg)) > MOVE_SENSITIVITY)
+  //  pros::delay(50);
+  await2Motors(LeftMotor, RightMotor, leftStartDeg, rightStartDeg, moveDeg, -moveDeg, MOVE_SENSITIVITY, MOVE_SENSITIVITY, -1);
 }
 void rotate(double rotationDeg)
 {
@@ -104,7 +119,7 @@ void realign()
   double rBand;
   while(true)
   {
-    rate.delayUntil(100);
+    pros::delay(100);
     double lDist = -1.0;
     double rDist = -1.0;
     while(/*true || */lDist < 0.0 || rDist < 0.0)
@@ -164,7 +179,7 @@ void realign()
           }
           else
           {
-            rate.delayUntil(50);
+            pros::delay(50);
           }
         }
       }

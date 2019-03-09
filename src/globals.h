@@ -20,9 +20,13 @@ extern Ultrasonic SonarL;
 extern Ultrasonic SonarR;
 
 //Utility Variables
-extern okapi::Rate rate;
+//extern okapi::Rate rate;
 extern okapi::Timer timer;
 
 //Runtime Variables
 extern BlockType targetBlock;
 extern bool holdingBlock;
+extern pros::vision_object_s_t blockVisionObjects[];
+extern pros::vision_object_s_t floorVisionObjects[];
+extern int blockVisionObjectCount;
+extern int floorVisionObjectCount;

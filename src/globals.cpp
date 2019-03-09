@@ -17,9 +17,13 @@ Ultrasonic SonarL = pros::c::ultrasonicInit(SONAR_L_PORT_IN, SONAR_L_PORT_OUT);
 Ultrasonic SonarR = pros::c::ultrasonicInit(SONAR_R_PORT_IN, SONAR_R_PORT_OUT);
 
 //Utility Variables
-okapi::Rate rate;
+//okapi::Rate rate;
 okapi::Timer timer;
 
 //Runtime Variables
 BlockType targetBlock = BlockType::None;
 bool holdingBlock = false;
+pros::vision_object_s_t blockVisionObjects[VISION_NUM_OBJECTS];
+pros::vision_object_s_t floorVisionObjects[VISION_NUM_OBJECTS];
+int blockVisionObjectCount = 0;
+int floorVisionObjectCount = 0;

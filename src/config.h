@@ -14,15 +14,6 @@
 #define SONAR_R_PORT_IN 3
 #define SONAR_R_PORT_OUT 4
 
-//Vision Sensor Signature Constants
-#define SIG_BLUE_BLOCK 0
-#define SIG_YELLOW_BLOCK 1
-#define SIG_RED_BLOCK 2
-#define SIG_BLUE_FLOOR 0
-#define SIG_YELLOW_FLOOR 1
-#define SIG_RED_FLOOR 2
-#define SIG_NULL 6
-
 //Constants
 #define WIDTH_TO_DIST 7.81705
 #define CM_TO_MOTOR_DEG 16.4245
@@ -35,6 +26,7 @@ enum class BlockType { None, Blue, Yellow, Red };
 enum class MovementType { None, Left, Right, Forward, Backward };
 
 //Config Variables
+#define VISION_NUM_OBJECTS 5
 #define SNAPSHOT_OBJ_COUNT 10
 #define MOVEMENT_SPEED 40
 #define REALIGN_SPEED 5
@@ -61,3 +53,18 @@ enum class MovementType { None, Left, Right, Forward, Backward };
 #define BLOCK_TYPE_MAX_X 350
 #define BLOCK_TYPE_MIN_Y 100
 #define BLOCK_TYPE_MAX_Y 150
+
+//Vision Sensor Signature Constants
+#define SIG_BLUE_BLOCK 0
+#define SIG_YELLOW_BLOCK 1
+#define SIG_RED_BLOCK 2
+#define SIG_BLUE_FLOOR 0
+#define SIG_YELLOW_FLOOR 1
+#define SIG_RED_FLOOR 2
+#define SIG_NULL 6
+#define SIG_INIT_BLUE_BLOCK BlockVision.signature_from_utility(SIG_BLUE_BLOCK, -2639, -2111, -2374, 14777, 18945, 16862, 4.800000190734863, 0)
+#define SIG_INIT_YELLOW_BLOCK BlockVision.signature_from_utility(SIG_YELLOW_BLOCK, 107, 445, 276, -3895, -3565, -3730, 4, 0)
+#define SIG_INIT_RED_BLOCK BlockVision.signature_from_utility(SIG_RED_BLOCK, 1143, 2789, 1966, 1093, 5881, 3487, 1.5, 0)
+#define SIG_INIT_BLUE_FLOOR FloorVision.signature_from_utility(SIG_BLUE_FLOOR, -4537, -3407, -3972, 6157, 8193, 7175, 5, 0)
+#define SIG_INIT_YELLOW_FLOOR FloorVision.signature_from_utility(SIG_YELLOW_FLOOR, 865, 1561, 1214, -3855, -3159, -3506, 2.799999952316284, 0)
+#define SIG_INIT_RED_FLOOR FloorVision.signature_from_utility(SIG_RED_FLOOR, 4617, 5051, 4834, -841, -547, -694, 6.099999904632568, 0)

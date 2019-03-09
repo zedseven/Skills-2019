@@ -1,4 +1,5 @@
 #include "main.h"
+#include "pros/apix.h"
 
 /**
  * Runs initialization code. This occurs as soon as the program is started.
@@ -7,9 +8,6 @@
  * to keep execution time for this mode under a few seconds.
  */
 void initialize() {
-	pros::lcd::initialize();
-	pros::lcd::set_text(1, "Skills-2019 Autonomous Started.");
-
 	//autonomous();
 }
 
