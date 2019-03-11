@@ -11,8 +11,8 @@ void autonomous()
   initMotors();
   openClaw();
   initSignatures();
-  //move(60);
-  //move(-60);
-  targetBlock = BlockType::Yellow;
-  findBlock();
+  move(60);
+  move(-60);
+  targetBlock = BlockType::Red;
+  //findBlock();
 }

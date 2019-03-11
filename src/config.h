@@ -20,8 +20,16 @@
 #define ROBOT_TO_MOTOR_DEG 3.5114//3.5097;//3.508457;
 #define BRAIN_SCREEN_WIDTH 480
 #define BRAIN_SCREEN_HEIGHT 272
+#define BRAIN_SCREEN_BANNER_HEIGHT 32
 #define VISION_WIDTH 304
 #define VISION_HEIGHT 208
+#define DRAWABLE_WIDTH BRAIN_SCREEN_WIDTH
+#define DRAWABLE_HEIGHT BRAIN_SCREEN_HEIGHT - BRAIN_SCREEN_BANNER_HEIGHT
+#define VISION_TO_DRAWABLE (((double) DRAWABLE_HEIGHT) / VISION_HEIGHT)
+#define DRAWN_VISION_BORDER std::round((BRAIN_SCREEN_WIDTH - (VISION_WIDTH * VISION_TO_DRAWABLE)) / 2)
+#define VISION_CENTER VISION_WIDTH / 2
+#define VISION_EXPOSURE_MIN 0
+#define VISION_EXPOSURE_MAX 150
 enum class BlockType { None, Blue, Yellow, Red };
 enum class MovementType { None, Left, Right, Forward, Backward };
 
@@ -30,7 +38,6 @@ enum class MovementType { None, Left, Right, Forward, Backward };
 #define SNAPSHOT_OBJ_COUNT 10
 #define MOVEMENT_SPEED 40
 #define REALIGN_SPEED 5
-#define VISION_CENTER 150
 #define VISION_CENTER_SENSITIVITY 40
 #define PICKUP_DIST 23
 #define PICKUP_SENSITIVITY 1.0
@@ -53,6 +60,15 @@ enum class MovementType { None, Left, Right, Forward, Backward };
 #define BLOCK_TYPE_MAX_X 350
 #define BLOCK_TYPE_MIN_Y 100
 #define BLOCK_TYPE_MAX_Y 150
+#define VISION_EXPOSURE_STEP_PRELIM 10
+
+//Vision Sensor Exposure Settings
+#define VISION_BLUE_BLOCK_EXPOSURE 50
+#define VISION_YELLOW_BLOCK_EXPOSURE 50
+#define VISION_RED_BLOCK_EXPOSURE 140
+#define VISION_BLUE_FLOOR_EXPOSURE 50
+#define VISION_YELLOW_FLOOR_EXPOSURE 50
+#define VISION_RED_FLOOR_EXPOSURE 50
 
 //Vision Sensor Signature Constants
 #define SIG_BLUE_BLOCK 0

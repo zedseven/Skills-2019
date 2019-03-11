@@ -15,22 +15,29 @@ void findBlock() //Looking for a block
   MovementType lastMvmt = MovementType::None;
   trackedMovements.push_back(std::make_tuple(MovementType::None, LeftMotor.get_position(), RightMotor.get_position()));
 
+  //Calibrate the vision sensor for the given block colour
+  //calibrateVisionExposure(BlockVision, blockTypeToBlockSig(targetBlock), blockVisionObjects);
+  setBlockVisionExposure(targetBlock);
+
   while(!finished)
   {
     //Brain.Screen.clearScreen();
 
     blockVisionObjectCount = takeSnapshot(BlockVision, blockTypeToBlockSig(targetBlock), blockVisionObjects);
+    clearScreenObjects();
     drawAllSnapshotObjects(blockVisionObjectCount, blockVisionObjects, blockTypeToColour(targetBlock));
     if(blockVisionObjectCount > 0)
     {
-      //Turn right
+      //For some reason, x_middle_coord and y_middle_coord are not populated
       printf("left_coord: %d\n", blockVisionObjects[0].left_coord);
+      printf("left_coord + width / 2.0 < VISION_CENTER - VISION_CENTER_SENSITIVITY | > VISION_CENTER + VISION_CENTER_SENSITIVITY: %d + %d / 2.0 < %d - %d | > %d + %d: %f < %d | %f > %d\n", blockVisionObjects[0].left_coord, blockVisionObjects[0].width, VISION_CENTER, VISION_CENTER_SENSITIVITY, VISION_CENTER, VISION_CENTER_SENSITIVITY, blockVisionObjects[0].left_coord + blockVisionObjects[0].width / 2.0, VISION_CENTER - VISION_CENTER_SENSITIVITY, blockVisionObjects[0].left_coord + blockVisionObjects[0].width / 2.0, VISION_CENTER + VISION_CENTER_SENSITIVITY);
+      printf("turn: %s\n", (blockVisionObjects[0].left_coord + blockVisionObjects[0].width / 2.0 < VISION_CENTER - VISION_CENTER_SENSITIVITY ? "RIGHT" : (blockVisionObjects[0].left_coord + blockVisionObjects[0].width / 2.0 > VISION_CENTER + VISION_CENTER_SENSITIVITY ? "LEFT" : "FWD/BWD")));
       printf("top_coord: %d\n", blockVisionObjects[0].top_coord);
       printf("x_middle_coord: %d\n", blockVisionObjects[0].x_middle_coord);
       printf("y_middle_coord: %d\n", blockVisionObjects[0].y_middle_coord);
       printf("width: %d\n", blockVisionObjects[0].width);
       printf("height: %d\n", blockVisionObjects[0].height);
-      //For some reason, x_middle_coord and y_middle_coord are not populated
+      //Turn right
       if(blockVisionObjects[0].left_coord + blockVisionObjects[0].width / 2.0 < VISION_CENTER - VISION_CENTER_SENSITIVITY)
       {
         lastMvmt = MovementType::Right;
@@ -127,6 +134,7 @@ void findPad() //Have a block, looking for the floor tile to deposit it at
     //Brain.Screen.clearScreen();
 
     floorVisionObjectCount = takeSnapshot(FloorVision, blockTypeToFloorSig(targetBlock), floorVisionObjects);
+    clearScreenObjects();
     drawAllSnapshotObjects(floorVisionObjectCount, floorVisionObjects, blockTypeToColour(targetBlock));
     if(floorVisionObjectCount > 0)
     {

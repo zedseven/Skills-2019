@@ -28,10 +28,45 @@
             "-fdiagnostics-color",
             "--std=gnu++17",
             "-o",
-            "C:/Users/Zacc/AppData/Local/Temp/tmp9hvm9jql/opcontrol.cpp.o",
+            "bin/utilities.cpp.o",
+            "src\\utilities.cpp"
+        ],
+        "directory": "F:\\Project Files\\C++ Files\\Skills-2019",
+        "file": "src\\utilities.cpp"
+    },
+    {
+        "arguments": [
+            "clang++",
+            "-c",
+            "-target",
+            "armv7ar-none-none-eabi",
+            "-fno-ms-extensions",
+            "-fno-ms-compatibility",
+            "-fno-delayed-template-parsing",
+            "-isystemc:\\program files\\pros\\toolchain\\usr\\bin\\../lib/gcc/arm-none-eabi/7.2.1/../../../../arm-none-eabi/include/c++/7.2.1",
+            "-isystemc:\\program files\\pros\\toolchain\\usr\\bin\\../lib/gcc/arm-none-eabi/7.2.1/../../../../arm-none-eabi/include/c++/7.2.1/arm-none-eabi/thumb/v7-ar/fpv3/softfp",
+            "-isystemc:\\program files\\pros\\toolchain\\usr\\bin\\../lib/gcc/arm-none-eabi/7.2.1/../../../../arm-none-eabi/include/c++/7.2.1/backward",
+            "-isystemc:\\program files\\pros\\toolchain\\usr\\bin\\../lib/gcc/arm-none-eabi/7.2.1/include",
+            "-isystemc:\\program files\\pros\\toolchain\\usr\\bin\\../lib/gcc/arm-none-eabi/7.2.1/include-fixed",
+            "-isystemc:\\program files\\pros\\toolchain\\usr\\bin\\../lib/gcc/arm-none-eabi/7.2.1/../../../../arm-none-eabi/include",
+            "-iquote./include",
+            "-iquote./include/./",
+            "-mcpu=cortex-a9",
+            "-mfpu=neon-fp16",
+            "-mfloat-abi=softfp",
+            "-D_POSIX_THREADS",
+            "-D_UNIX98_THREAD_MUTEX_ATTRIBUTES",
+            "-Os",
+            "-funwind-tables",
+            "-ffunction-sections",
+            "-fdata-sections",
+            "-fdiagnostics-color",
+            "--std=gnu++17",
+            "-o",
+            "bin/opcontrol.cpp.o",
             "src\\opcontrol.cpp"
         ],
-        "directory": "C:\\Users\\Zacc\\Documents\\VexProsProjects\\Skills-2019",
+        "directory": "F:\\Project Files\\C++ Files\\Skills-2019",
         "file": "src\\opcontrol.cpp"
     },
     {
@@ -66,7 +101,7 @@
             "bin/initialize.cpp.o",
             "src\\initialize.cpp"
         ],
-        "directory": "C:\\Users\\Zacc\\Documents\\VexProsProjects\\Skills-2019",
+        "directory": "F:\\Project Files\\C++ Files\\Skills-2019",
         "file": "src\\initialize.cpp"
     },
     {
@@ -101,43 +136,8 @@
             "bin/globals.cpp.o",
             "src\\globals.cpp"
         ],
-        "directory": "C:\\Users\\Zacc\\Documents\\VexProsProjects\\Skills-2019",
+        "directory": "F:\\Project Files\\C++ Files\\Skills-2019",
         "file": "src\\globals.cpp"
-    },
-    {
-        "arguments": [
-            "clang++",
-            "-c",
-            "-target",
-            "armv7ar-none-none-eabi",
-            "-fno-ms-extensions",
-            "-fno-ms-compatibility",
-            "-fno-delayed-template-parsing",
-            "-isystemc:\\program files\\pros\\toolchain\\usr\\bin\\../lib/gcc/arm-none-eabi/7.2.1/../../../../arm-none-eabi/include/c++/7.2.1",
-            "-isystemc:\\program files\\pros\\toolchain\\usr\\bin\\../lib/gcc/arm-none-eabi/7.2.1/../../../../arm-none-eabi/include/c++/7.2.1/arm-none-eabi/thumb/v7-ar/fpv3/softfp",
-            "-isystemc:\\program files\\pros\\toolchain\\usr\\bin\\../lib/gcc/arm-none-eabi/7.2.1/../../../../arm-none-eabi/include/c++/7.2.1/backward",
-            "-isystemc:\\program files\\pros\\toolchain\\usr\\bin\\../lib/gcc/arm-none-eabi/7.2.1/include",
-            "-isystemc:\\program files\\pros\\toolchain\\usr\\bin\\../lib/gcc/arm-none-eabi/7.2.1/include-fixed",
-            "-isystemc:\\program files\\pros\\toolchain\\usr\\bin\\../lib/gcc/arm-none-eabi/7.2.1/../../../../arm-none-eabi/include",
-            "-iquote./include",
-            "-iquote./include/./",
-            "-mcpu=cortex-a9",
-            "-mfpu=neon-fp16",
-            "-mfloat-abi=softfp",
-            "-D_POSIX_THREADS",
-            "-D_UNIX98_THREAD_MUTEX_ATTRIBUTES",
-            "-Os",
-            "-funwind-tables",
-            "-ffunction-sections",
-            "-fdata-sections",
-            "-fdiagnostics-color",
-            "--std=gnu++17",
-            "-o",
-            "bin/utilities.cpp.o",
-            "src\\utilities.cpp"
-        ],
-        "directory": "C:\\Users\\Zacc\\Documents\\VexProsProjects\\Skills-2019",
-        "file": "src\\utilities.cpp"
     },
     {
         "arguments": [
@@ -171,7 +171,7 @@
             "bin/vision.cpp.o",
             "src\\vision.cpp"
         ],
-        "directory": "C:\\Users\\Zacc\\Documents\\VexProsProjects\\Skills-2019",
+        "directory": "F:\\Project Files\\C++ Files\\Skills-2019",
         "file": "src\\vision.cpp"
     },
     {
@@ -206,7 +206,7 @@
             "bin/operations.cpp.o",
             "src\\operations.cpp"
         ],
-        "directory": "C:\\Users\\Zacc\\Documents\\VexProsProjects\\Skills-2019",
+        "directory": "F:\\Project Files\\C++ Files\\Skills-2019",
         "file": "src\\operations.cpp"
     },
     {
@@ -241,7 +241,7 @@
             "bin/autonomous.cpp.o",
             "src\\autonomous.cpp"
         ],
-        "directory": "C:\\Users\\Zacc\\Documents\\VexProsProjects\\Skills-2019",
+        "directory": "F:\\Project Files\\C++ Files\\Skills-2019",
         "file": "src\\autonomous.cpp"
     },
     {
@@ -276,7 +276,7 @@
             "bin/movement.cpp.o",
             "src\\movement.cpp"
         ],
-        "directory": "C:\\Users\\Zacc\\Documents\\VexProsProjects\\Skills-2019",
+        "directory": "F:\\Project Files\\C++ Files\\Skills-2019",
         "file": "src\\movement.cpp"
     }
 ]

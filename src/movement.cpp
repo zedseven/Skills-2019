@@ -64,21 +64,15 @@ void spinMotorUntilTimeout(pros::Motor motor, double speed, double timeout)
 {
   timer.placeMark();
   motor.move_velocity(speed);
-  pros::delay(100);
-  printf("getDtFromMark: %f\n", timer.getDtFromMark().convert(millisecond));
-  printf("motor.is_stopped: %d\n", motor.is_stopped() ? 1 : 0);
-  while(!motor.is_stopped() && (timeout < 0 || timer.getDtFromMark().convert(millisecond) < timeout))
-  {
-    printf("getDtFromMark: %f\n", timer.getDtFromMark().convert(millisecond));
+  while((motor.get_actual_velocity() != 0.0 || timer.getDtFromMark().convert(millisecond) < 200) && (timeout < 0 || timer.getDtFromMark().convert(millisecond) < timeout))
     pros::delay(50);
-  }
   timer.clearMark();
 }
 void spinMotorUntilTimeout(pros::Motor motor, double speed)
 {
   spinMotorUntilTimeout(motor, speed, -1);
 }
-void moveDeg(double moveDegs, double moveSpeed) //distance in cm
+void moveDeg(double moveDegs, double moveSpeed)
 {
   double leftStartDeg = LeftMotor.get_position();
   double rightStartDeg = RightMotor.get_position();
