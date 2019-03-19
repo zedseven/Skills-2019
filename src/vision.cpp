@@ -23,6 +23,7 @@ void initSignatures()
   FloorVision.set_signature(SIG_BLUE_FLOOR, &blueFloorSig);
   FloorVision.set_signature(SIG_YELLOW_FLOOR, &yellowFloorSig);
   FloorVision.set_signature(SIG_RED_FLOOR, &redFloorSig);
+  printf("Initialized the vision sensors. Exposure values: BlockVision: %d | FloorVision: %d\n", BlockVision.get_exposure(), FloorVision.get_exposure());
 }
 
 double getDistFromObjWidth(int objWidth)
@@ -113,6 +114,7 @@ void drawAllSnapshotObjects(int objectCount, pros::vision_object_s_t *objects, l
 
 int calibrateVisionExposure(pros::Vision vision, int signature, pros::vision_object_s_t *objects)
 {
+  //DON'T NEED TO DO INTERMEDIATE PRECISE RANGE
   int startExp = -1;
   int endExp = -1;
   for(int i = VISION_EXPOSURE_MIN / VISION_EXPOSURE_STEP_PRELIM; i <= VISION_EXPOSURE_MAX / VISION_EXPOSURE_STEP_PRELIM; i++)

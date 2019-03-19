@@ -64,7 +64,7 @@ void spinMotorUntilTimeout(pros::Motor motor, double speed, double timeout)
 {
   timer.placeMark();
   motor.move_velocity(speed);
-  while((motor.get_actual_velocity() != 0.0 || timer.getDtFromMark().convert(millisecond) < 200) && (timeout < 0 || timer.getDtFromMark().convert(millisecond) < timeout))
+  while((motor.get_actual_velocity() != 0.0 || timer.getDtFromMark().convert(millisecond) < SPIN_UNTIL_MIN_MSEC) && (timeout < 0 || timer.getDtFromMark().convert(millisecond) < timeout))
     pros::delay(50);
   timer.clearMark();
 }
@@ -194,8 +194,9 @@ void moveUntilDist(double targetDist, double moveIncrement)
     rDist = -1.0;
     while(/*true || */lDist < 0.0 || rDist < 0.0)
     {
-      lDist = pros::c::ultrasonicGet(SonarL);
-      rDist = pros::c::ultrasonicGet(SonarR);
+      lDist = pros::c::ultrasonicGet(SonarL) / 10.0;
+      rDist = pros::c::ultrasonicGet(SonarR) / 10.0;
+      printf("lDist: %f rDist: %f\n", lDist, rDist);
     }
     measureDist = (lDist + rDist) / 2.0;
     distDiff = measureDist - targetDist;

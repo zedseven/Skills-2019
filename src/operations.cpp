@@ -16,8 +16,8 @@ void findBlock() //Looking for a block
   trackedMovements.push_back(std::make_tuple(MovementType::None, LeftMotor.get_position(), RightMotor.get_position()));
 
   //Calibrate the vision sensor for the given block colour
-  //calibrateVisionExposure(BlockVision, blockTypeToBlockSig(targetBlock), blockVisionObjects);
-  setBlockVisionExposure(targetBlock);
+  calibrateVisionExposure(BlockVision, blockTypeToBlockSig(targetBlock), blockVisionObjects);
+  //setBlockVisionExposure(targetBlock);
 
   while(!finished)
   {

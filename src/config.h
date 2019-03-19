@@ -1,5 +1,8 @@
 #pragma once
 
+//High-level Configuration
+#define LAYOUT_NUM 2
+
 //Motor Ports
 #define LEFT_MOTOR_PORT 1
 #define RIGHT_MOTOR_PORT 2
@@ -61,11 +64,12 @@ enum class MovementType { None, Left, Right, Forward, Backward };
 #define BLOCK_TYPE_MIN_Y 100
 #define BLOCK_TYPE_MAX_Y 150
 #define VISION_EXPOSURE_STEP_PRELIM 10
+#define SPIN_UNTIL_MIN_MSEC 400
 
 //Vision Sensor Exposure Settings
 #define VISION_BLUE_BLOCK_EXPOSURE 50
 #define VISION_YELLOW_BLOCK_EXPOSURE 50
-#define VISION_RED_BLOCK_EXPOSURE 140
+#define VISION_RED_BLOCK_EXPOSURE 0
 #define VISION_BLUE_FLOOR_EXPOSURE 50
 #define VISION_YELLOW_FLOOR_EXPOSURE 50
 #define VISION_RED_FLOOR_EXPOSURE 50
