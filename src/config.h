@@ -37,10 +37,12 @@ enum class BlockType { None, Blue, Yellow, Red };
 enum class MovementType { None, Left, Right, Forward, Backward };
 
 //Config Variables
+#define VISION_BLOCK_WIFI_ON 1
+#define VISION_FLOOR_WIFI_ON 0
 #define VISION_NUM_OBJECTS 5
 #define SNAPSHOT_OBJ_COUNT 10
 #define MOVEMENT_SPEED 40
-#define REALIGN_SPEED 5
+#define REALIGN_SPEED 8/*5*/
 #define VISION_CENTER_SENSITIVITY 40
 #define PICKUP_DIST 23
 #define PICKUP_SENSITIVITY 1.0
@@ -50,13 +52,13 @@ enum class MovementType { None, Left, Right, Forward, Backward };
 #define ARM_DROPOFF_DEG 550
 #define ARM_PICKUP_SENSITIVITY 5
 #define ARM_PICKUP_SPEED 30
-#define MOVE_SENSITIVITY 1
+#define MOVE_SENSITIVITY 5
 #define DROPOFF_MIN 110
 #define DROPOFF_MAX 150
 #define CLAW_CLOSE_DEG -190//-170;//-155; //degrees
 #define CLAW_MOVE_SPEED 40
 #define LAMP_ON_SPEED 100
-#define REALIGN_SENSITIVITY 0.1
+#define REALIGN_SENSITIVITY 0.2/*0.1*/
 #define REALIGN_DIST 50.0
 #define MOVE_UNTIL_SENSITIVITY 1.0
 #define BLOCK_TYPE_MIN_X 300
@@ -66,26 +68,28 @@ enum class MovementType { None, Left, Right, Forward, Backward };
 #define VISION_EXPOSURE_STEP_PRELIM 10
 #define SPIN_UNTIL_MIN_MSEC 400
 #define VISION_OUTLIER_SENSITIVITY 40
+#define VISION_SNAPSHOT_MIN_AREA 400
 
 //Vision Sensor Exposure Settings
-#define VISION_BLUE_BLOCK_EXPOSURE 50
-#define VISION_YELLOW_BLOCK_EXPOSURE 50
-#define VISION_RED_BLOCK_EXPOSURE 70
+#define VISION_BLUE_BLOCK_EXPOSURE 85
+#define VISION_YELLOW_BLOCK_EXPOSURE 70
+#define VISION_RED_BLOCK_EXPOSURE 110/*94*/
 #define VISION_BLUE_FLOOR_EXPOSURE 50
 #define VISION_YELLOW_FLOOR_EXPOSURE 50
 #define VISION_RED_FLOOR_EXPOSURE 50
 
 //Vision Sensor Signature Constants
-#define SIG_BLUE_BLOCK 0
-#define SIG_YELLOW_BLOCK 1
-#define SIG_RED_BLOCK 2
-#define SIG_BLUE_FLOOR 0
-#define SIG_YELLOW_FLOOR 1
-#define SIG_RED_FLOOR 2
+#define SIG_BLUE_BLOCK 1
+#define SIG_YELLOW_BLOCK 2
+#define SIG_RED_BLOCK 3
+#define SIG_BLUE_FLOOR 1
+#define SIG_YELLOW_FLOOR 2
+#define SIG_RED_FLOOR 3
 #define SIG_NULL 6
-#define SIG_INIT_BLUE_BLOCK BlockVision.signature_from_utility(SIG_BLUE_BLOCK, -2639, -2111, -2374, 14777, 18945, 16862, 4.800000190734863, 0)
-#define SIG_INIT_YELLOW_BLOCK BlockVision.signature_from_utility(SIG_YELLOW_BLOCK, 107, 445, 276, -3895, -3565, -3730, 4, 0)
+//Pulled from the VCS utility, exported by ../configExporter.html
+#define SIG_INIT_BLUE_BLOCK BlockVision.signature_from_utility(SIG_BLUE_BLOCK, -3157, -2607, -2882, 11645, 13653, 12650, 5.5, 0)
+#define SIG_INIT_YELLOW_BLOCK BlockVision.signature_from_utility(SIG_YELLOW_BLOCK, 107, 445, 276, -3895, -3565, -3730, 5.5, 0)
 #define SIG_INIT_RED_BLOCK BlockVision.signature_from_utility(SIG_RED_BLOCK, 5461, 6255, 5858, -1655, -1033, -1344, 5.5, 0)
-#define SIG_INIT_BLUE_FLOOR FloorVision.signature_from_utility(SIG_BLUE_FLOOR, -4537, -3407, -3972, 6157, 8193, 7175, 5, 0)
-#define SIG_INIT_YELLOW_FLOOR FloorVision.signature_from_utility(SIG_YELLOW_FLOOR, 865, 1561, 1214, -3855, -3159, -3506, 2.799999952316284, 0)
-#define SIG_INIT_RED_FLOOR FloorVision.signature_from_utility(SIG_RED_FLOOR, 4617, 5051, 4834, -841, -547, -694, 6.099999904632568, 0)
+#define SIG_INIT_BLUE_FLOOR FloorVision.signature_from_utility(SIG_BLUE_FLOOR, -3583, -3073, -3328, 5391, 6237, 5814, 2.799999952316284, 0)
+#define SIG_INIT_YELLOW_FLOOR FloorVision.signature_from_utility(SIG_YELLOW_FLOOR, 865, 1561, 1214, -3855, -3159, -3506, 6.099999904632568, 0)
+#define SIG_INIT_RED_FLOOR FloorVision.signature_from_utility(SIG_RED_FLOOR, 8045, 10049, 9048, -1103, -735, -918, 5, 0)

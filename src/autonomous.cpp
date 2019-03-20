@@ -12,9 +12,6 @@ void autonomous()
   initMotors();
   openClaw();
   initSignatures();
-  move(34);
-  rotate(-45);
-  realign();
   switch(LAYOUT_NUM)
   {
     case 1:

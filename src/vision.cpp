@@ -9,8 +9,8 @@ using namespace okapi;
 
 void initSignatures()
 {
-  BlockVision.set_wifi_mode(0);
-  FloorVision.set_wifi_mode(0);
+  BlockVision.set_wifi_mode(VISION_BLOCK_WIFI_ON);
+  FloorVision.set_wifi_mode(VISION_FLOOR_WIFI_ON);
   pros::vision_signature_s_t blueBlockSig = SIG_INIT_BLUE_BLOCK;
   pros::vision_signature_s_t yellowBlockSig = SIG_INIT_YELLOW_BLOCK;
   pros::vision_signature_s_t redBlockSig = SIG_INIT_RED_BLOCK;
@@ -196,23 +196,33 @@ void setFloorVisionExposure(BlockType blockType)
   }
 }
 
+pros::vision_object_s_t getLargestObject(int objectCount, pros::vision_object_s_t *objects)
+{
+  pros::vision_object_s_t largestObj;
+  int largestArea = -1;
+  for(int i = 0; i < objectCount; i++)
+  {
+    if(objects[i].width * objects[i].height > largestArea)
+    {
+      largestArea = objects[i].width * objects[i].height;
+      largestObj = objects[i];
+    }
+  }
+  return largestObj;
+}
+
 int takeSnapshot(pros::Vision vision, int signature, pros::vision_object_s_t *objects)
 {
   int numObjects = -1;
   int passNum = 0;
-  while((numObjects <= 0 || numObjects != PROS_ERR) && passNum < 15)
+  while((numObjects <= 0 || numObjects == PROS_ERR) && passNum < 15)
   {
     numObjects = vision.read_by_sig(0, signature, VISION_NUM_OBJECTS, objects);
-    if(numObjects > 0)
-    {
-      if(std::abs(lastVisionTargetCenterX - (objects[0].left_coord + objects[0].width / 2)) > VISION_OUTLIER_SENSITIVITY)
-        numObjects = -1;
-    }
     passNum += 1;
-    pros::delay(50);
+    pros::delay(5);
   }
   if(numObjects == PROS_ERR)
-    return -1;
+    return -2;
   lastVisionTargetCenterX = objects[0].left_coord + objects[0].width / 2;
   return numObjects;
 }

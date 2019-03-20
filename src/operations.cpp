@@ -28,33 +28,34 @@ void findBlock() //Looking for a block
     drawAllSnapshotObjects(blockVisionObjectCount, blockVisionObjects, blockTypeToColour(targetBlock));
     if(blockVisionObjectCount > 0)
     {
+      pros::vision_object_s_t largestObj = getLargestObject(blockVisionObjectCount, blockVisionObjects);
       //For some reason, x_middle_coord and y_middle_coord are not populated
-      printf("left_coord: %d\n", blockVisionObjects[0].left_coord);
-      printf("left_coord + width / 2.0 < VISION_CENTER - VISION_CENTER_SENSITIVITY | > VISION_CENTER + VISION_CENTER_SENSITIVITY: %d + %d / 2.0 < %d - %d | > %d + %d: %f < %d | %f > %d\n", blockVisionObjects[0].left_coord, blockVisionObjects[0].width, VISION_CENTER, VISION_CENTER_SENSITIVITY, VISION_CENTER, VISION_CENTER_SENSITIVITY, blockVisionObjects[0].left_coord + blockVisionObjects[0].width / 2.0, VISION_CENTER - VISION_CENTER_SENSITIVITY, blockVisionObjects[0].left_coord + blockVisionObjects[0].width / 2.0, VISION_CENTER + VISION_CENTER_SENSITIVITY);
-      printf("turn: %s\n", (blockVisionObjects[0].left_coord + blockVisionObjects[0].width / 2.0 < VISION_CENTER - VISION_CENTER_SENSITIVITY ? "RIGHT" : (blockVisionObjects[0].left_coord + blockVisionObjects[0].width / 2.0 > VISION_CENTER + VISION_CENTER_SENSITIVITY ? "LEFT" : "FWD/BWD")));
-      printf("top_coord: %d\n", blockVisionObjects[0].top_coord);
-      printf("x_middle_coord: %d\n", blockVisionObjects[0].x_middle_coord);
-      printf("y_middle_coord: %d\n", blockVisionObjects[0].y_middle_coord);
-      printf("width: %d\n", blockVisionObjects[0].width);
-      printf("height: %d\n", blockVisionObjects[0].height);
+      printf("left_coord: %d\n", largestObj.left_coord);
+      printf("left_coord + width / 2.0 < VISION_CENTER - VISION_CENTER_SENSITIVITY | > VISION_CENTER + VISION_CENTER_SENSITIVITY: %d + %d / 2.0 < %d - %d | > %d + %d: %f < %d | %f > %d\n", blockVisionObjects[0].left_coord, blockVisionObjects[0].width, VISION_CENTER, VISION_CENTER_SENSITIVITY, VISION_CENTER, VISION_CENTER_SENSITIVITY, blockVisionObjects[0].left_coord + blockVisionObjects[0].width / 2.0, VISION_CENTER - VISION_CENTER_SENSITIVITY, blockVisionObjects[0].left_coord + largestObj.width / 2.0, VISION_CENTER + VISION_CENTER_SENSITIVITY);
+      printf("turn: %s\n", (largestObj.left_coord + largestObj.width / 2.0 < VISION_CENTER - VISION_CENTER_SENSITIVITY ? "RIGHT" : (largestObj.left_coord + largestObj.width / 2.0 > VISION_CENTER + VISION_CENTER_SENSITIVITY ? "LEFT" : "FWD/BWD")));
+      printf("top_coord: %d\n", largestObj.top_coord);
+      printf("x_middle_coord: %d\n", largestObj.x_middle_coord);
+      printf("y_middle_coord: %d\n", largestObj.y_middle_coord);
+      printf("width: %d\n", largestObj.width);
+      printf("height: %d\n", largestObj.height);
       //Turn right
-      if(blockVisionObjects[0].left_coord + blockVisionObjects[0].width / 2.0 < VISION_CENTER - VISION_CENTER_SENSITIVITY)
+      if(largestObj.left_coord + largestObj.width / 2.0 < VISION_CENTER - VISION_CENTER_SENSITIVITY)
       {
         lastMvmt = MovementType::Right;
-        RightMotor.move_velocity(-MOVEMENT_SPEED);
         LeftMotor.move_velocity(MOVEMENT_SPEED);
+        RightMotor.move_velocity(-MOVEMENT_SPEED);
       }
       //Turn left
-      else if(blockVisionObjects[0].left_coord + blockVisionObjects[0].width / 2.0 > VISION_CENTER + VISION_CENTER_SENSITIVITY)
+      else if(largestObj.left_coord + largestObj.width / 2.0 > VISION_CENTER + VISION_CENTER_SENSITIVITY)
       {
         lastMvmt = MovementType::Left;
-        LeftMotor.move_velocity(MOVEMENT_SPEED);
-        RightMotor.move_velocity(-MOVEMENT_SPEED);
+        LeftMotor.move_velocity(-MOVEMENT_SPEED);
+        RightMotor.move_velocity(MOVEMENT_SPEED);
       }
       //Go straight
       else
       {
-        float blockDist = getDistFromObjWidth(blockVisionObjects[0].width);
+        float blockDist = getDistFromObjWidth(largestObj.width);
         //Too close - go backwards
         if(blockDist < PICKUP_DIST - PICKUP_SENSITIVITY)
         {
@@ -129,6 +130,8 @@ void findPad() //Have a block, looking for the floor tile to deposit it at
   MovementType lastMvmt = MovementType::None;
   trackedMovements.push_back(std::make_tuple(MovementType::None, LeftMotor.get_position(), RightMotor.get_position()));
 
+  setFloorVisionExposure(targetBlock);
+
   while(!finished)
   {
     //Brain.Screen.clearScreen();
@@ -138,15 +141,16 @@ void findPad() //Have a block, looking for the floor tile to deposit it at
     drawAllSnapshotObjects(floorVisionObjectCount, floorVisionObjects, blockTypeToColour(targetBlock));
     if(floorVisionObjectCount > 0)
     {
+      pros::vision_object_s_t largestObj = getLargestObject(floorVisionObjectCount, floorVisionObjects);
       //Turn right
-      if(floorVisionObjects[0].left_coord + floorVisionObjects[0].width / 2.0 < VISION_CENTER - VISION_CENTER_SENSITIVITY)
+      if(largestObj.left_coord + largestObj.width / 2.0 < VISION_CENTER - VISION_CENTER_SENSITIVITY)
       {
         lastMvmt = MovementType::Right;
         LeftMotor.move_velocity(-MOVEMENT_SPEED);
         RightMotor.move_velocity(MOVEMENT_SPEED);
       }
       //Turn left
-      else if(floorVisionObjects[0].left_coord + floorVisionObjects[0].width / 2.0 > VISION_CENTER + VISION_CENTER_SENSITIVITY)
+      else if(largestObj.left_coord + largestObj.width / 2.0 > VISION_CENTER + VISION_CENTER_SENSITIVITY)
       {
         lastMvmt = MovementType::Left;
         LeftMotor.move_velocity(MOVEMENT_SPEED);
@@ -156,14 +160,14 @@ void findPad() //Have a block, looking for the floor tile to deposit it at
       else
       {
         //Not close enough - go forwards
-        if(floorVisionObjects[0].top_coord + floorVisionObjects[0].height / 2.0 < DROPOFF_MIN)
+        if(largestObj.top_coord + largestObj.height / 2.0 < DROPOFF_MIN)
         {
           lastMvmt = MovementType::Forward;
           LeftMotor.move_velocity(MOVEMENT_SPEED);
           RightMotor.move_velocity(MOVEMENT_SPEED);
         }
         //Too far - go backwards
-        else if(floorVisionObjects[0].top_coord + floorVisionObjects[0].height / 2.0 > DROPOFF_MAX)
+        else if(largestObj.top_coord + largestObj.height / 2.0 > DROPOFF_MAX)
         {
           lastMvmt = MovementType::Backward;
           LeftMotor.move_velocity(-MOVEMENT_SPEED);
