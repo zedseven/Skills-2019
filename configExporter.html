@@ -1,0 +1,32 @@
+<html lang='en'>
+  <head>
+    <title>Vex V5 Vision Sensor Signature Exporter</title>
+    <meta charset='utf-8' />
+  </head>
+  <body>
+    <p>This takes the full JSON data in the *.vex file (really just a compressed archive with a solitary JSON file) and outputs the _INIT definitions as used in my code.</p>
+    <textarea name='rawJson' id='rawJson' rows="8" cols="80"></textarea><br /><br />
+    <button onclick='exportVisionData();'>Export</button><br /><br />
+    <pre id='exportOutput'></pre>
+    <script type='text/javascript'>
+      function exportVisionData() {
+        let output = ''
+        let rawJson = document.getElementById('rawJson').value;
+        let parsedJson = JSON.parse(rawJson);
+        console.log(parsedJson.components);
+        parsedJson.components.forEach(function(comp) {
+          if(comp.class != 'vex::vision')
+            return;
+          comp.data.signatures.forEach(function(sig) {
+            if(sig.name.toLowerCase().indexOf('null') > -1)
+              return;
+            //Assumes all signature names start with 'SIG_'
+            output += '#define SIG_INIT_' + sig.name.substr(4) + ' ' + comp.name + '.signature_from_utility(' + sig.name + ', ' + sig.parameters.uMin + ', ' + sig.parameters.uMax + ', ' + sig.parameters.uMean + ', ' + sig.parameters.vMin + ', ' + sig.parameters.vMax + ', ' + sig.parameters.vMean + ', ' + sig.range + ', ' + sig.parameters.type + ')\n'
+          });
+        });
+        console.log(output);
+        document.getElementById('exportOutput').innerHTML = output;
+      }
+    </script>
+  </body>
+</html>

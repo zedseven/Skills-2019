@@ -65,11 +65,12 @@ enum class MovementType { None, Left, Right, Forward, Backward };
 #define BLOCK_TYPE_MAX_Y 150
 #define VISION_EXPOSURE_STEP_PRELIM 10
 #define SPIN_UNTIL_MIN_MSEC 400
+#define VISION_OUTLIER_SENSITIVITY 40
 
 //Vision Sensor Exposure Settings
 #define VISION_BLUE_BLOCK_EXPOSURE 50
 #define VISION_YELLOW_BLOCK_EXPOSURE 50
-#define VISION_RED_BLOCK_EXPOSURE 0
+#define VISION_RED_BLOCK_EXPOSURE 70
 #define VISION_BLUE_FLOOR_EXPOSURE 50
 #define VISION_YELLOW_FLOOR_EXPOSURE 50
 #define VISION_RED_FLOOR_EXPOSURE 50
@@ -84,7 +85,7 @@ enum class MovementType { None, Left, Right, Forward, Backward };
 #define SIG_NULL 6
 #define SIG_INIT_BLUE_BLOCK BlockVision.signature_from_utility(SIG_BLUE_BLOCK, -2639, -2111, -2374, 14777, 18945, 16862, 4.800000190734863, 0)
 #define SIG_INIT_YELLOW_BLOCK BlockVision.signature_from_utility(SIG_YELLOW_BLOCK, 107, 445, 276, -3895, -3565, -3730, 4, 0)
-#define SIG_INIT_RED_BLOCK BlockVision.signature_from_utility(SIG_RED_BLOCK, 1143, 2789, 1966, 1093, 5881, 3487, 1.5, 0)
+#define SIG_INIT_RED_BLOCK BlockVision.signature_from_utility(SIG_RED_BLOCK, 5461, 6255, 5858, -1655, -1033, -1344, 5.5, 0)
 #define SIG_INIT_BLUE_FLOOR FloorVision.signature_from_utility(SIG_BLUE_FLOOR, -4537, -3407, -3972, 6157, 8193, 7175, 5, 0)
 #define SIG_INIT_YELLOW_FLOOR FloorVision.signature_from_utility(SIG_YELLOW_FLOOR, 865, 1561, 1214, -3855, -3159, -3506, 2.799999952316284, 0)
 #define SIG_INIT_RED_FLOOR FloorVision.signature_from_utility(SIG_RED_FLOOR, 4617, 5051, 4834, -841, -547, -694, 6.099999904632568, 0)

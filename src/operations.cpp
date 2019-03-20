@@ -5,7 +5,7 @@
 
 void findBlock() //Looking for a block
 {
-  if(targetBlock != BlockType::Yellow)
+  if(targetBlock == BlockType::Blue)
     Lamp.move_velocity(LAMP_ON_SPEED);
   else
     Lamp.move(0);
@@ -16,8 +16,8 @@ void findBlock() //Looking for a block
   trackedMovements.push_back(std::make_tuple(MovementType::None, LeftMotor.get_position(), RightMotor.get_position()));
 
   //Calibrate the vision sensor for the given block colour
-  calibrateVisionExposure(BlockVision, blockTypeToBlockSig(targetBlock), blockVisionObjects);
-  //setBlockVisionExposure(targetBlock);
+  //calibrateVisionExposure(BlockVision, blockTypeToBlockSig(targetBlock), blockVisionObjects);
+  setBlockVisionExposure(targetBlock);
 
   while(!finished)
   {
@@ -119,7 +119,7 @@ void findBlock() //Looking for a block
 
 void findPad() //Have a block, looking for the floor tile to deposit it at
 {
-  if(targetBlock != BlockType::Yellow)
+  if(targetBlock == BlockType::Blue)
     Lamp.move_velocity(LAMP_ON_SPEED);//spin(directionType::fwd, lampOnSpeed, velocityUnits::rpm);
   else
     Lamp.move(0);

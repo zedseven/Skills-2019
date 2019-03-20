@@ -198,8 +198,21 @@ void setFloorVisionExposure(BlockType blockType)
 
 int takeSnapshot(pros::Vision vision, int signature, pros::vision_object_s_t *objects)
 {
-  int numObjects = vision.read_by_sig(0, signature, VISION_NUM_OBJECTS, objects);
+  int numObjects = -1;
+  int passNum = 0;
+  while((numObjects <= 0 || numObjects != PROS_ERR) && passNum < 15)
+  {
+    numObjects = vision.read_by_sig(0, signature, VISION_NUM_OBJECTS, objects);
+    if(numObjects > 0)
+    {
+      if(std::abs(lastVisionTargetCenterX - (objects[0].left_coord + objects[0].width / 2)) > VISION_OUTLIER_SENSITIVITY)
+        numObjects = -1;
+    }
+    passNum += 1;
+    pros::delay(50);
+  }
   if(numObjects == PROS_ERR)
     return -1;
+  lastVisionTargetCenterX = objects[0].left_coord + objects[0].width / 2;
   return numObjects;
 }
