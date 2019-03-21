@@ -28,4 +28,3 @@ pros::vision_object_s_t floorVisionObjects[VISION_NUM_OBJECTS];
 int blockVisionObjectCount = 0;
 int floorVisionObjectCount = 0;
 std::vector<lv_obj_t *> screenObjects;
-int lastVisionTargetCenterX = -1;

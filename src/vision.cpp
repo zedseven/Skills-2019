@@ -1,5 +1,6 @@
 #include "config.h"
 #include "globals.h"
+#include "utilities.h"
 #include "main.h"
 #include "pros/vision.hpp"
 #include "pros/apix.h"
@@ -222,7 +223,9 @@ int takeSnapshot(pros::Vision vision, int signature, pros::vision_object_s_t *ob
     pros::delay(5);
   }
   if(numObjects == PROS_ERR)
-    return -2;
-  lastVisionTargetCenterX = objects[0].left_coord + objects[0].width / 2;
+  {
+    printf("Taking a snapshot failed, exiting with errno %s.", readableErrno().c_str());
+    return -1;
+  }
   return numObjects;
 }

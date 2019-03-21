@@ -217,15 +217,22 @@ void closeClawOnBlock()
   ClawMotor.move_absolute(CLAW_CLOSE_DEG, CLAW_MOVE_SPEED);
   await1Motor(ClawMotor, CLAW_CLOSE_DEG, 1, 1500);
 }
-void openClaw()
+void openClawTensed()
 {
   spinMotorUntilTimeout(ClawMotor, CLAW_MOVE_SPEED, 2000);
   ClawMotor.tare_position();
   ClawMotor.set_brake_mode(MOTOR_BRAKE_HOLD);
 }
+void openClawRelaxed()
+{
+  spinMotorUntilTimeout(ClawMotor, CLAW_MOVE_SPEED, 2000);
+  ClawMotor.tare_position();
+  ClawMotor.set_brake_mode(MOTOR_BRAKE_COAST);
+}
 void pickupBlock()
 {
-  //Assuming claw is open
+  //Open claw
+  openClawTensed();
   ArmMotorL.move_absolute(ARM_PICKUP_DEG, ARM_PICKUP_SPEED);
   ArmMotorR.move_absolute(ARM_PICKUP_DEG, ARM_PICKUP_SPEED);
   //Wait until the arms have been lowered
@@ -244,7 +251,7 @@ void dropoffBlock()
   ArmMotorR.move_absolute(ARM_DROPOFF_DEG, ARM_PICKUP_SPEED);
   //Wait until the arms have been lowered
   await2Motors(ArmMotorL, ArmMotorR, ARM_DROPOFF_DEG, ARM_PICKUP_SENSITIVITY, 4000);
-  openClaw();
+  openClawRelaxed();
   ArmMotorL.move_absolute(0, ARM_PICKUP_SPEED);
   ArmMotorR.move_absolute(0, ARM_PICKUP_SPEED);
   //Wait until the arms have been raised

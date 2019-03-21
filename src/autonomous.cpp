@@ -10,7 +10,7 @@ void autonomous()
 {
   printf("Started.\n");
   initMotors();
-  openClaw();
+  //openClaw();
   initSignatures();
   switch(LAYOUT_NUM)
   {

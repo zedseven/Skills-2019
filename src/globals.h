@@ -31,4 +31,3 @@ extern pros::vision_object_s_t floorVisionObjects[];
 extern int blockVisionObjectCount;
 extern int floorVisionObjectCount;
 extern std::vector<lv_obj_t *> screenObjects;
-extern int lastVisionTargetCenterX;
