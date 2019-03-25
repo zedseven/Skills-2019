@@ -21,5 +21,8 @@ void realign();
 void moveUntilDist(double targetDist, double moveIncrement);
 void closeClawOnBlock();
 void openClaw();
+void openClawRelaxed();
 void pickupBlock();
+void lowerBlock();
+void raiseArms();
 void dropoffBlock();

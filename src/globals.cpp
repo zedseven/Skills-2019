@@ -17,7 +17,6 @@ Ultrasonic SonarL = pros::c::ultrasonicInit(SONAR_L_PORT_IN, SONAR_L_PORT_OUT);
 Ultrasonic SonarR = pros::c::ultrasonicInit(SONAR_R_PORT_IN, SONAR_R_PORT_OUT);
 
 //Utility Variables
-//okapi::Rate rate;
 okapi::Timer timer;
 
 //Runtime Variables
@@ -28,3 +27,6 @@ pros::vision_object_s_t floorVisionObjects[VISION_NUM_OBJECTS];
 int blockVisionObjectCount = 0;
 int floorVisionObjectCount = 0;
 std::vector<lv_obj_t *> screenObjects;
+int deliveredBlues = 0;
+int deliveredReds = 0;
+int deliveredYellows = 0;

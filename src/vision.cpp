@@ -224,7 +224,7 @@ int takeSnapshot(pros::Vision vision, int signature, pros::vision_object_s_t *ob
   }
   if(numObjects == PROS_ERR)
   {
-    printf("Taking a snapshot failed, exiting with errno %s.", readableErrno().c_str());
+    printf("Taking a snapshot failed, exiting with errno %s.\n", readableErrno().c_str());
     return -1;
   }
   return numObjects;

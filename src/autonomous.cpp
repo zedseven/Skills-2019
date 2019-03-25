@@ -12,6 +12,15 @@ void autonomous()
   initMotors();
   //openClaw();
   initSignatures();
+  /*double lDist;
+  double rDist;
+  while(true)
+  {
+    lDist = pros::c::ultrasonicGet(SonarL);
+    rDist = pros::c::ultrasonicGet(SonarR);
+    printf("l: %f r: %f\n", lDist, rDist);
+    pros::delay(50);
+  }*/
   switch(LAYOUT_NUM)
   {
     case 1:

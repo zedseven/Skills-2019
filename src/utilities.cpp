@@ -12,8 +12,10 @@ std::string readableErrno()
       return "EINVAL";
     case ENXIO: //The LCD has not been initialized. Call lcd_initialize first.
       return "ENXIO";
-    case EDOM: //size_id is greater than the number of available objects.
+    case EDOM: //Domain error. size_id is greater than the number of available objects.
       return "EDOM";
+    case ERANGE: //Range error.
+      return "ERANGE";
     case EHOSTDOWN: //Reading the vision sensor failed for an unknown reason.
       return "EHOSTDOWN";
     default:

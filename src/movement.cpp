@@ -111,9 +111,10 @@ void rotate(double rotationDeg)
 void realign()
 {
   double rBand;
+  int realignNum = 1;
   while(true)
   {
-    pros::delay(100);
+    pros::delay(50/*100*/);
     double lDist = -1.0;
     double rDist = -1.0;
     while(/*true || */lDist < 0.0 || rDist < 0.0)
@@ -123,7 +124,7 @@ void realign()
       //Brain.Screen.printAt(100, 100, "L: %f", lDist);
       //Brain.Screen.printAt(100, 200, "R: %f", rDist);
     }
-    rBand = fmax(0.2, (((lDist + rDist) / 2.0) / REALIGN_DIST) * 0.125 + REALIGN_SENSITIVITY);
+    rBand = fmax(0.2, (((lDist + rDist) / 2.0) / REALIGN_DIST) * 0.125 + REALIGN_SENSITIVITY) * (pow(fmax(1.0, realignNum / 3.0), 0.1));
     //Brain.Screen.printAt(100, 220, "rBand: %f", rBand);
     double distDiff = rDist - lDist;
     if(distDiff > rBand) //Right is further away - turn left
@@ -180,6 +181,7 @@ void realign()
       if(done)
         break;
     }
+    realignNum++;
   }
 }
 void moveUntilDist(double targetDist, double moveIncrement)
@@ -244,17 +246,25 @@ void pickupBlock()
   await2Motors(ArmMotorL, ArmMotorR, 0, ARM_PICKUP_SENSITIVITY, 4000);
   holdingBlock = true;
 }
-void dropoffBlock()
+void lowerBlock()
 {
   //Assuming claw is closed
   ArmMotorL.move_absolute(ARM_DROPOFF_DEG, ARM_PICKUP_SPEED);
   ArmMotorR.move_absolute(ARM_DROPOFF_DEG, ARM_PICKUP_SPEED);
   //Wait until the arms have been lowered
   await2Motors(ArmMotorL, ArmMotorR, ARM_DROPOFF_DEG, ARM_PICKUP_SENSITIVITY, 4000);
-  openClawRelaxed();
+}
+void raiseArms()
+{
   ArmMotorL.move_absolute(0, ARM_PICKUP_SPEED);
   ArmMotorR.move_absolute(0, ARM_PICKUP_SPEED);
   //Wait until the arms have been raised
   await2Motors(ArmMotorL, ArmMotorR, 0, ARM_PICKUP_SENSITIVITY, 4000);
+}
+void dropoffBlock()
+{
+  lowerBlock();
+  openClawRelaxed();
+  raiseArms();
   holdingBlock = false;
 }

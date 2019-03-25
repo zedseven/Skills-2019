@@ -37,11 +37,12 @@ enum class BlockType { None, Blue, Yellow, Red };
 enum class MovementType { None, Left, Right, Forward, Backward };
 
 //Config Variables
-#define VISION_BLOCK_WIFI_ON 1
+#define VISION_BLOCK_WIFI_ON 0
 #define VISION_FLOOR_WIFI_ON 0
 #define VISION_NUM_OBJECTS 5
 #define SNAPSHOT_OBJ_COUNT 10
-#define MOVEMENT_SPEED 40
+#define MOVEMENT_SPEED 60/*40*/
+#define CAMERA_MOVEMENT_SPEED 40
 #define REALIGN_SPEED 8/*5*/
 #define VISION_CENTER_SENSITIVITY 40
 #define PICKUP_DIST 23
@@ -49,13 +50,13 @@ enum class MovementType { None, Left, Right, Forward, Backward };
 #define DROPOFF_DIST 11
 #define DROPOFF_SENSITIVITY 0.6
 #define ARM_PICKUP_DEG 450
-#define ARM_DROPOFF_DEG 550
+#define ARM_DROPOFF_DEG 600/*550*/
 #define ARM_PICKUP_SENSITIVITY 5
-#define ARM_PICKUP_SPEED 30
+#define ARM_PICKUP_SPEED 50/*30*/
 #define MOVE_SENSITIVITY 5
 #define DROPOFF_MIN 110
 #define DROPOFF_MAX 150
-#define CLAW_CLOSE_DEG -190//-170;//-155; //degrees
+#define CLAW_CLOSE_DEG -190/*//-170;//-155; //degrees*/
 #define CLAW_MOVE_SPEED 40
 #define LAMP_ON_SPEED 100
 #define REALIGN_SENSITIVITY 0.2/*0.1*/
@@ -69,6 +70,10 @@ enum class MovementType { None, Left, Right, Forward, Backward };
 #define SPIN_UNTIL_MIN_MSEC 400
 #define VISION_OUTLIER_SENSITIVITY 40
 #define VISION_SNAPSHOT_MIN_AREA 400
+#define BLOCK_DROPOFF_FORWARD_BONUS 6
+#define DROPOFF_MOVE_OFFSET 16/*14*/
+#define BLOCK_DROPOFF_INITIAL_BACKWARD 14
+#define VISION_NUM_SIGHTS_PICKUP 5
 
 //Vision Sensor Exposure Settings
 #define VISION_BLUE_BLOCK_EXPOSURE 85

@@ -19,6 +19,7 @@ void findBlock() //Looking for a block
   //calibrateVisionExposure(BlockVision, blockTypeToBlockSig(targetBlock), blockVisionObjects);
   setBlockVisionExposure(targetBlock);
 
+  int numSights = 0; //Number of times the block has been seen in a row as being ready to pick up
   while(!finished)
   {
     //Brain.Screen.clearScreen();
@@ -38,19 +39,21 @@ void findBlock() //Looking for a block
       printf("y_middle_coord: %d\n", largestObj.y_middle_coord);
       printf("width: %d\n", largestObj.width);
       printf("height: %d\n", largestObj.height);
-      //Turn right
+      //Turn left
       if(largestObj.left_coord + largestObj.width / 2.0 < VISION_CENTER - VISION_CENTER_SENSITIVITY)
       {
-        lastMvmt = MovementType::Right;
-        LeftMotor.move_velocity(MOVEMENT_SPEED);
-        RightMotor.move_velocity(-MOVEMENT_SPEED);
+        numSights = 0;
+        lastMvmt = MovementType::Left;
+        LeftMotor.move_velocity(-CAMERA_MOVEMENT_SPEED);
+        RightMotor.move_velocity(CAMERA_MOVEMENT_SPEED);
       }
-      //Turn left
+      //Turn right
       else if(largestObj.left_coord + largestObj.width / 2.0 > VISION_CENTER + VISION_CENTER_SENSITIVITY)
       {
-        lastMvmt = MovementType::Left;
-        LeftMotor.move_velocity(-MOVEMENT_SPEED);
-        RightMotor.move_velocity(MOVEMENT_SPEED);
+        numSights = 0;
+        lastMvmt = MovementType::Right;
+        LeftMotor.move_velocity(CAMERA_MOVEMENT_SPEED);
+        RightMotor.move_velocity(-CAMERA_MOVEMENT_SPEED);
       }
       //Go straight
       else
@@ -59,24 +62,33 @@ void findBlock() //Looking for a block
         //Too close - go backwards
         if(blockDist < PICKUP_DIST - PICKUP_SENSITIVITY)
         {
+          numSights = 0;
           lastMvmt = MovementType::Backward;
-          LeftMotor.move_velocity(-MOVEMENT_SPEED);
-          RightMotor.move_velocity(-MOVEMENT_SPEED);
+          LeftMotor.move_velocity(-CAMERA_MOVEMENT_SPEED);
+          RightMotor.move_velocity(-CAMERA_MOVEMENT_SPEED);
         }
         //Too far - go forwards
         else if(blockDist > PICKUP_DIST + PICKUP_SENSITIVITY)
         {
+          numSights = 0;
           lastMvmt = MovementType::Forward;
-          LeftMotor.move_velocity(MOVEMENT_SPEED);
-          RightMotor.move_velocity(MOVEMENT_SPEED);
+          LeftMotor.move_velocity(CAMERA_MOVEMENT_SPEED);
+          RightMotor.move_velocity(CAMERA_MOVEMENT_SPEED);
         }
         //Optimal distance to pick up with claw
         else
         {
-          lastMvmt = MovementType::None;
           resetMotors();
-          pickupBlock();
-          finished = true;
+          if(numSights >= VISION_NUM_SIGHTS_PICKUP)
+          {
+            lastMvmt = MovementType::None;
+            pickupBlock();
+            finished = true;
+          }
+          else
+          {
+            numSights++;
+          }
         }
       }
       if(trackedMovements.empty() || std::get<0>(trackedMovements.back()) != lastMvmt)
@@ -111,8 +123,8 @@ void findBlock() //Looking for a block
       i = j + 1;
       double leftTarget = std::get<1>(trackedMovements[j]);
       double rightTarget = std::get<2>(trackedMovements[j]);
-      LeftMotor.move_absolute(leftTarget, MOVEMENT_SPEED);
-      RightMotor.move_absolute(rightTarget, MOVEMENT_SPEED);
+      LeftMotor.move_absolute(leftTarget, CAMERA_MOVEMENT_SPEED);
+      RightMotor.move_absolute(rightTarget, CAMERA_MOVEMENT_SPEED);
       while(fabs(fabs(LeftMotor.get_position()) - fabs(leftTarget)) > MOVE_SENSITIVITY || fabs(fabs(RightMotor.get_position()) - fabs(rightTarget)) > MOVE_SENSITIVITY)
         pros::delay(50);
   }
@@ -120,10 +132,26 @@ void findBlock() //Looking for a block
 
 void findPad() //Have a block, looking for the floor tile to deposit it at
 {
-  if(targetBlock == BlockType::Blue)
+  int *relevantDeliverCount;
+  switch(targetBlock)
+  {
+    case BlockType::Blue:
+      relevantDeliverCount = &deliveredBlues;
+      break;
+    case BlockType::Red:
+      relevantDeliverCount = &deliveredReds;
+      break;
+    case BlockType::Yellow:
+      relevantDeliverCount = &deliveredYellows;
+      break;
+    default:
+      return;
+  }
+
+  /*if(targetBlock == BlockType::Blue)
     Lamp.move_velocity(LAMP_ON_SPEED);//spin(directionType::fwd, lampOnSpeed, velocityUnits::rpm);
   else
-    Lamp.move(0);
+    Lamp.move(0);*/
 
   bool finished = false;
   std::vector<std::tuple<MovementType, double, double>> trackedMovements;
@@ -142,19 +170,19 @@ void findPad() //Have a block, looking for the floor tile to deposit it at
     if(floorVisionObjectCount > 0)
     {
       pros::vision_object_s_t largestObj = getLargestObject(floorVisionObjectCount, floorVisionObjects);
-      //Turn right
+      //Turn left
       if(largestObj.left_coord + largestObj.width / 2.0 < VISION_CENTER - VISION_CENTER_SENSITIVITY)
       {
-        lastMvmt = MovementType::Right;
-        LeftMotor.move_velocity(-MOVEMENT_SPEED);
-        RightMotor.move_velocity(MOVEMENT_SPEED);
+        lastMvmt = MovementType::Left;
+        LeftMotor.move_velocity(-CAMERA_MOVEMENT_SPEED);
+        RightMotor.move_velocity(CAMERA_MOVEMENT_SPEED);
       }
-      //Turn left
+      //Turn right
       else if(largestObj.left_coord + largestObj.width / 2.0 > VISION_CENTER + VISION_CENTER_SENSITIVITY)
       {
-        lastMvmt = MovementType::Left;
-        LeftMotor.move_velocity(MOVEMENT_SPEED);
-        RightMotor.move_velocity(-MOVEMENT_SPEED);
+        lastMvmt = MovementType::Right;
+        LeftMotor.move_velocity(CAMERA_MOVEMENT_SPEED);
+        RightMotor.move_velocity(-CAMERA_MOVEMENT_SPEED);
       }
       //Go straight
       else
@@ -163,23 +191,35 @@ void findPad() //Have a block, looking for the floor tile to deposit it at
         if(largestObj.top_coord + largestObj.height / 2.0 < DROPOFF_MIN)
         {
           lastMvmt = MovementType::Forward;
-          LeftMotor.move_velocity(MOVEMENT_SPEED);
-          RightMotor.move_velocity(MOVEMENT_SPEED);
+          LeftMotor.move_velocity(CAMERA_MOVEMENT_SPEED);
+          RightMotor.move_velocity(CAMERA_MOVEMENT_SPEED);
         }
         //Too far - go backwards
         else if(largestObj.top_coord + largestObj.height / 2.0 > DROPOFF_MAX)
         {
           lastMvmt = MovementType::Backward;
-          LeftMotor.move_velocity(-MOVEMENT_SPEED);
-          RightMotor.move_velocity(-MOVEMENT_SPEED);
+          LeftMotor.move_velocity(-CAMERA_MOVEMENT_SPEED);
+          RightMotor.move_velocity(-CAMERA_MOVEMENT_SPEED);
         }
         else
         {
           lastMvmt = MovementType::None;
           resetMotors();
-          move(12); //THIS NEEDS TO BE CHANGED FOR IF HAVING 0 | 1 OF BLOCK ALREADY
-          dropoffBlock();
-          move(-12);
+          if(*relevantDeliverCount > 0) //Second block to this pad
+          {
+            move(-BLOCK_DROPOFF_INITIAL_BACKWARD);
+            lowerBlock();
+            move(BLOCK_DROPOFF_INITIAL_BACKWARD + BLOCK_DROPOFF_FORWARD_BONUS);
+            openClawRelaxed();
+            raiseArms();
+            move(-BLOCK_DROPOFF_FORWARD_BONUS);
+          }
+          else
+          {
+            move(BLOCK_DROPOFF_FORWARD_BONUS); //THIS NEEDS TO BE CHANGED FOR IF HAVING 0 | 1 OF BLOCK ALREADY
+            dropoffBlock();
+            move(-BLOCK_DROPOFF_FORWARD_BONUS);
+          }
           finished = true;
         }
       }
@@ -215,9 +255,11 @@ void findPad() //Have a block, looking for the floor tile to deposit it at
     i = j + 1;
     double leftTarget = std::get<1>(trackedMovements[j]);
     double rightTarget = std::get<2>(trackedMovements[j]);
-    LeftMotor.move_absolute(leftTarget, MOVEMENT_SPEED);
-    RightMotor.move_absolute(rightTarget, MOVEMENT_SPEED);
+    LeftMotor.move_absolute(leftTarget, CAMERA_MOVEMENT_SPEED);
+    RightMotor.move_absolute(rightTarget, CAMERA_MOVEMENT_SPEED);
     while(fabs(fabs(LeftMotor.get_position()) - fabs(leftTarget)) > MOVE_SENSITIVITY || fabs(fabs(RightMotor.get_position()) - fabs(rightTarget)) > MOVE_SENSITIVITY)
       pros::delay(50);
   }
+
+  *relevantDeliverCount += 1;
 }
