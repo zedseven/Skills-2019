@@ -5,6 +5,9 @@
 
 void findBlock() //Looking for a block
 {
+  if(TEST_MODE == 1)
+    return;
+
   if(targetBlock == BlockType::Blue)
     Lamp.move_velocity(LAMP_ON_SPEED);
   else
@@ -132,6 +135,9 @@ void findBlock() //Looking for a block
 
 void findPad() //Have a block, looking for the floor tile to deposit it at
 {
+  if(TEST_MODE == 1)
+    return;
+  
   int *relevantDeliverCount;
   switch(targetBlock)
   {
