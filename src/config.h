@@ -1,7 +1,7 @@
 #pragma once
 
 //High-level Configuration
-#define LAYOUT_NUM 1
+#define LAYOUT_NUM 6
 #define TEST_MODE 1
 
 //Motor Ports
@@ -72,14 +72,15 @@ enum class MovementType { None, Left, Right, Forward, Backward };
 #define VISION_OUTLIER_SENSITIVITY 40
 #define VISION_SNAPSHOT_MIN_AREA 400
 #define BLOCK_DROPOFF_FORWARD_BONUS 11
+#define BLOCK_DROPOFF_FORWARD_BONUS_2 8
 #define DROPOFF_MOVE_OFFSET 16/*14*/
 #define BLOCK_DROPOFF_INITIAL_BACKWARD 14
 #define VISION_NUM_SIGHTS_PICKUP 5
 
 //Vision Sensor Exposure Settings
-#define VISION_BLUE_BLOCK_EXPOSURE 85
-#define VISION_YELLOW_BLOCK_EXPOSURE 70
-#define VISION_RED_BLOCK_EXPOSURE 125/*110*//*94*/
+#define VISION_BLUE_BLOCK_EXPOSURE 95
+#define VISION_YELLOW_BLOCK_EXPOSURE 20
+#define VISION_RED_BLOCK_EXPOSURE 70/*110*//*94*/
 #define VISION_BLUE_FLOOR_EXPOSURE 50
 #define VISION_YELLOW_FLOOR_EXPOSURE 50
 #define VISION_RED_FLOOR_EXPOSURE 50
@@ -93,7 +94,7 @@ enum class MovementType { None, Left, Right, Forward, Backward };
 #define SIG_RED_FLOOR 3
 #define SIG_NULL 6
 //Pulled from the VCS utility, exported by ../configExporter.html
-#define SIG_INIT_BLUE_BLOCK BlockVision.signature_from_utility(SIG_BLUE_BLOCK, -3157, -2607, -2882, 11645, 13653, 12650, 5.5, 0)
+#define SIG_INIT_BLUE_BLOCK BlockVision.signature_from_utility(SIG_BLUE_BLOCK, -3157, -2607, -2882, 11645, 13653, 12650, 7.5, 0)
 #define SIG_INIT_YELLOW_BLOCK BlockVision.signature_from_utility(SIG_YELLOW_BLOCK, 107, 445, 276, -3895, -3565, -3730, 5.5, 0)
 #define SIG_INIT_RED_BLOCK BlockVision.signature_from_utility(SIG_RED_BLOCK, 5461, 6255, 5858, -1655, -1033, -1344, 8, 0)
 #define SIG_INIT_BLUE_FLOOR FloorVision.signature_from_utility(SIG_BLUE_FLOOR, -3583, -3073, -3328, 5391, 6237, 5814, 7, 0)

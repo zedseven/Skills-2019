@@ -33,6 +33,7 @@ void layout1()
   rotate(-135);
   //Red Block A
   targetBlock = BlockType::Red;
+  move(50);
   moveUntilDist(122, 30);
   rotate(90);
   move(20);
@@ -59,9 +60,9 @@ void layout1()
   rotate(90);
   move(80);
   rotate(-90);
-  move(20);
+  move(35);
   realign();
-  move(-35);
+  move(-50);
   rotate(90);
   move(30);
   rotate(-45);
@@ -95,10 +96,13 @@ void layout1()
   rotate(90);
   move(20);
   rotate(-45);
+  move(20);
   findPad();
+  move(-20);
   rotate(135);
   //Red Block B
   targetBlock = BlockType::Red;
+  move(15);
   rotate(60);
   move(20);
   findBlock();
@@ -106,7 +110,8 @@ void layout1()
   rotate(-60);
   moveUntilDist(55, 30);
   rotate(90);
-  moveUntilDist(55, 30);
+  //moveUntilDist(55, 30);
+  move(90);
   rotate(-45);
   findPad();
 }

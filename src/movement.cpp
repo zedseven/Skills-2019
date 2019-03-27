@@ -124,6 +124,7 @@ void realign()
       //Brain.Screen.printAt(100, 100, "L: %f", lDist);
       //Brain.Screen.printAt(100, 200, "R: %f", rDist);
     }
+    printf("lDist: %f rDist: %f\n", lDist, rDist);
     rBand = fmax(0.2, (((lDist + rDist) / 2.0) / REALIGN_DIST) * 0.125 + REALIGN_SENSITIVITY) * (pow(fmax(1.0, realignNum / 3.0), 0.1));
     //Brain.Screen.printAt(100, 220, "rBand: %f", rBand);
     double distDiff = rDist - lDist;
@@ -198,7 +199,7 @@ void moveUntilDist(double targetDist, double moveIncrement)
     {
       lDist = pros::c::ultrasonicGet(SonarL) / 10.0;
       rDist = pros::c::ultrasonicGet(SonarR) / 10.0;
-      printf("lDist: %f rDist: %f\n", lDist, rDist);
+      //printf("lDist: %f rDist: %f\n", lDist, rDist);
     }
     measureDist = (lDist + rDist) / 2.0;
     distDiff = measureDist - targetDist;
