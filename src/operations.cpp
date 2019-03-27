@@ -6,7 +6,10 @@
 void findBlock() //Looking for a block
 {
   if(TEST_MODE == 1)
+  {
+    pros::delay(500);
     return;
+  }
 
   if(targetBlock == BlockType::Blue)
     Lamp.move_velocity(LAMP_ON_SPEED);
@@ -136,7 +139,10 @@ void findBlock() //Looking for a block
 void findPad() //Have a block, looking for the floor tile to deposit it at
 {
   if(TEST_MODE == 1)
+  {
+    pros::delay(500);
     return;
+  }
 
   int *relevantDeliverCount;
   switch(targetBlock)
@@ -240,7 +246,9 @@ void findPad() //Have a block, looking for the floor tile to deposit it at
     }
     else
     {
-      resetMotors();
+      //resetMotors();
+      LeftMotor.move_velocity(CAMERA_MOVEMENT_SPEED);
+      RightMotor.move_velocity(CAMERA_MOVEMENT_SPEED);
     }
     pros::delay(50);
   }

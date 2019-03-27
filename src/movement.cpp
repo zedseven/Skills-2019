@@ -112,7 +112,9 @@ void realign()
 {
   double rBand;
   int realignNum = 1;
-  while(true)
+  double lStartDeg = LeftMotor.get_position();
+  double rStartDeg = RightMotor.get_position();
+  while(realignNum <= REALIGN_MAX_MOVES)
   {
     pros::delay(50/*100*/);
     double lDist = -1.0;
@@ -142,7 +144,7 @@ void realign()
     {
       resetMotors();
       bool done = true;
-      for(int j = 0; j < 5; j++)
+      for(int j = 0; j < 4; j++)
       {
         if(!done)
           break;
@@ -175,15 +177,24 @@ void realign()
           }
           else
           {
-            pros::delay(50);
+            pros::delay(20);
           }
         }
       }
       if(done)
         break;
     }
+    //To avoid being completely thrown off - basically just cutting our losses if the realign can't work
+    if((fabs(LeftMotor.get_position() - lStartDeg) + fabs(RightMotor.get_position() - rStartDeg)) / 2.0 > REALIGN_CUTOFF_MOTOR_DEG)
+    {
+      LeftMotor.move_absolute(lStartDeg, REALIGN_SPEED);
+      RightMotor.move_absolute(rStartDeg, REALIGN_SPEED);
+      await2Motors(LeftMotor, RightMotor, lStartDeg, rStartDeg, 1.0, 6000);
+      break;
+    }
     realignNum++;
   }
+  printf("Started with (%f, %f), and ended with (%f, %f) after %d movement%s.\n", lStartDeg, rStartDeg, LeftMotor.get_position(), RightMotor.get_position(), realignNum, (realignNum != 1 ? "s" : ""));
 }
 void moveUntilDist(double targetDist, double moveIncrement)
 {
@@ -214,11 +225,15 @@ void moveUntilDist(double targetDist, double moveIncrement)
   //Brain.Screen.printAt(50, 120, "Done moving.");
   realign();
 }
-void closeClawOnBlock()
+void closeClawOnBlock(int timeout)
 {
   ClawMotor.set_brake_mode(MOTOR_BRAKE_HOLD);//setTimeout(1500, timeUnits::msec);
   ClawMotor.move_absolute(CLAW_CLOSE_DEG, CLAW_MOVE_SPEED);
-  await1Motor(ClawMotor, CLAW_CLOSE_DEG, 1, 1500);
+  await1Motor(ClawMotor, CLAW_CLOSE_DEG, 1, timeout);
+}
+void closeClawOnBlock()
+{
+  closeClawOnBlock(1500);
 }
 void openClawTensed()
 {
@@ -230,6 +245,7 @@ void openClawRelaxed()
 {
   spinMotorUntilTimeout(ClawMotor, CLAW_MOVE_SPEED, 2000);
   ClawMotor.tare_position();
+  ClawMotor.move(0);
   ClawMotor.set_brake_mode(MOTOR_BRAKE_COAST);
 }
 void pickupBlock()
@@ -245,6 +261,9 @@ void pickupBlock()
   ArmMotorR.move_absolute(0, ARM_PICKUP_SPEED);
   //Wait until the arms have been raised
   await2Motors(ArmMotorL, ArmMotorR, 0, ARM_PICKUP_SENSITIVITY, 4000);
+  //Relax the claw while holding the block upright to prevent overheating
+  ClawMotor.move(0);
+  ClawMotor.set_brake_mode(MOTOR_BRAKE_COAST);
   holdingBlock = true;
 }
 void lowerBlock()
@@ -264,6 +283,7 @@ void raiseArms()
 }
 void dropoffBlock()
 {
+  closeClawOnBlock(300);
   lowerBlock();
   openClawRelaxed();
   raiseArms();
