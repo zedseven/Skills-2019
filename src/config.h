@@ -1,7 +1,7 @@
 #pragma once
 
 //High-level Configuration
-#define LAYOUT_NUM 3
+#define LAYOUT_NUM 4
 #define TEST_MODE 1
 #define BLUE_BLOCK_LAMP_ON 1
 #define YELLOW_BLOCK_LAMP_ON 0
