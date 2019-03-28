@@ -223,18 +223,18 @@ void findPad() //Have a block, looking for the floor tile to deposit it at
           resetMotors();
           if(*relevantDeliverCount > 0) //Second block to this pad
           {
-            move(-BLOCK_DROPOFF_INITIAL_BACKWARD);
+            move(-DROPOFF_INITIAL_BACKWARD);
             lowerBlock();
-            move(BLOCK_DROPOFF_INITIAL_BACKWARD + BLOCK_DROPOFF_FORWARD_BONUS_2);
+            move(DROPOFF_INITIAL_BACKWARD + DROPOFF_FORWARD_BONUS_2);
             openClawRelaxed();
             raiseArms();
-            move(-BLOCK_DROPOFF_FORWARD_BONUS_2);
+            move(-DROPOFF_FORWARD_BONUS_2);
           }
           else
           {
-            move(BLOCK_DROPOFF_FORWARD_BONUS); //THIS NEEDS TO BE CHANGED FOR IF HAVING 0 | 1 OF BLOCK ALREADY
+            move(DROPOFF_FORWARD_BONUS);
             dropoffBlock();
-            move(-BLOCK_DROPOFF_FORWARD_BONUS);
+            move(-DROPOFF_FORWARD_BONUS);
           }
           finished = true;
         }
