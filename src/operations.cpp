@@ -11,7 +11,11 @@ void findBlock() //Looking for a block
     return;
   }
 
-  if(targetBlock == BlockType::Blue)
+  if(targetBlock == BlockType::Blue && BLUE_BLOCK_LAMP_ON == 1)
+    Lamp.move_velocity(LAMP_ON_SPEED);
+  else if(targetBlock == BlockType::Yellow && YELLOW_BLOCK_LAMP_ON == 1)
+    Lamp.move_velocity(LAMP_ON_SPEED);
+  else if(targetBlock == BlockType::Red && RED_BLOCK_LAMP_ON == 1)
     Lamp.move_velocity(LAMP_ON_SPEED);
   else
     Lamp.move(0);

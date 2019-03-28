@@ -1,8 +1,11 @@
 #pragma once
 
 //High-level Configuration
-#define LAYOUT_NUM 5
+#define LAYOUT_NUM 3
 #define TEST_MODE 1
+#define BLUE_BLOCK_LAMP_ON 1
+#define YELLOW_BLOCK_LAMP_ON 0
+#define RED_BLOCK_LAMP_ON 0
 
 //Motor Ports
 #define LEFT_MOTOR_PORT 20
