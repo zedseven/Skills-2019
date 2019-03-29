@@ -1,0 +1,10 @@
+bin/* linguist-generated=true
+firmware/* linguist-vendored
+include/* linguist-vendored
+src/*.h linguist-language=C++
+common.mk linguist-generated=true
+compile_commands.json linguist-generated=true
+LICENSE linguist-documentation
+Makefile linguist-generated=true
+*.pros linguist-language=JSON
+README.md linguist-documentation
