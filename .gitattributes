@@ -10,3 +10,4 @@ LICENSE linguist-documentation
 Makefile linguist-generated=true
 *.pros linguist-language=JSON
 README.md linguist-documentation
+*.vex binary
