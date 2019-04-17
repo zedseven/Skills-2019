@@ -18,6 +18,8 @@ void move(double distance); //distance in cm
 void rotateDeg(double moveDeg);
 void rotate(double rotationDeg);
 void realign();
+void realignLine(bool leftDefault, double dist);
+void realignLine(double dist);
 void moveUntilDist(double targetDist, double moveIncrement);
 void closeClawOnBlock();
 void openClaw();

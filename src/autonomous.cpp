@@ -9,6 +9,7 @@
 void autonomous()
 {
   printf("Started.\n");
+  initSensors();
   initMotors();
   //openClaw();
   initSignatures();
@@ -21,6 +22,9 @@ void autonomous()
     printf("l: %f r: %f\n", lDist, rDist);
     pros::delay(50);
   }*/
+  realignLine(17);
+  resetMotors();
+  return;
   switch(LAYOUT_NUM)
   {
     case 1:

@@ -30,3 +30,11 @@ std::vector<lv_obj_t *> screenObjects;
 int deliveredBlues = 0;
 int deliveredReds = 0;
 int deliveredYellows = 0;
+
+void initSensors()
+{
+  pros::c::pinMode(LINE_L_PORT, INPUT_ANALOG);
+  pros::c::pinMode(LINE_M_PORT, INPUT_ANALOG);
+  pros::c::pinMode(LINE_R_PORT, INPUT_ANALOG);
+  pros::c::pinMode(LINE_B_PORT, INPUT_ANALOG);
+}

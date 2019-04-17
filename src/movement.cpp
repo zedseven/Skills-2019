@@ -194,6 +194,7 @@ void realign()
     }
     realignNum++;
   }
+  resetMotors();
   printf("Started with (%f, %f), and ended with (%f, %f) after %d movement%s.\n", lStartDeg, rStartDeg, LeftMotor.get_position(), RightMotor.get_position(), realignNum, (realignNum != 1 ? "s" : ""));
 }
 void moveUntilDist(double targetDist, double moveIncrement)
@@ -222,8 +223,186 @@ void moveUntilDist(double targetDist, double moveIncrement)
     else
       break;
   }
+  resetMotors();
   //Brain.Screen.printAt(50, 120, "Done moving.");
   realign();
+}
+void realignLine(bool leftDefault, double dist)
+{
+  bool lineL = false;
+  bool lineM = false;
+  bool lineR = false;
+  bool lineB = false;
+  //Align horizontally
+  while(true)
+  {
+    lineL = pros::c::analogRead(LINE_L_PORT) >= LINE_VALUE_THRESHOLD;
+    lineM = pros::c::analogRead(LINE_M_PORT) >= LINE_VALUE_THRESHOLD;
+    lineR = pros::c::analogRead(LINE_R_PORT) >= LINE_VALUE_THRESHOLD;
+    lineB = pros::c::analogRead(LINE_B_PORT) >= LINE_VALUE_THRESHOLD;
+    printf("%d %d %d %d\n", (lineL ? 1 : 0), (lineM ? 1 : 0), (lineR ? 1 : 0), (lineB ? 1 : 0));
+    printf("%d\n", pros::c::analogRead(LINE_B_PORT));
+    if(lineL)
+    {
+      LeftMotor.move_velocity(-LINE_MOVEMENT_SPEED);
+      RightMotor.move_velocity(LINE_MOVEMENT_SPEED);
+    }
+    else if(lineR)
+    {
+      LeftMotor.move_velocity(LINE_MOVEMENT_SPEED);
+      RightMotor.move_velocity(-LINE_MOVEMENT_SPEED);
+    }
+    else if(lineM && !lineB)
+    {
+      LeftMotor.move_velocity(LINE_MOVEMENT_SPEED);
+      RightMotor.move_velocity(LINE_MOVEMENT_SPEED);
+    }
+    else if(lineM && !lineL && !lineR && lineB)
+    {
+      break;
+    }
+    else
+    {
+      if(leftDefault) //If we suspect we'll be to the left of the line (turn right) more frequently, etc.
+      {
+        LeftMotor.move_velocity(-LINE_MOVEMENT_SPEED);
+        RightMotor.move_velocity(LINE_MOVEMENT_SPEED);
+      }
+      else
+      {
+        LeftMotor.move_velocity(LINE_MOVEMENT_SPEED);
+        RightMotor.move_velocity(-LINE_MOVEMENT_SPEED);
+      }
+    }
+  }
+  while(true)
+  {
+    lineL = pros::c::analogRead(LINE_L_PORT) >= LINE_VALUE_THRESHOLD;
+    lineM = pros::c::analogRead(LINE_M_PORT) >= LINE_VALUE_THRESHOLD;
+    lineR = pros::c::analogRead(LINE_R_PORT) >= LINE_VALUE_THRESHOLD;
+    lineB = pros::c::analogRead(LINE_B_PORT) >= LINE_VALUE_THRESHOLD;
+    printf("%d %d %d %d\n", (lineL ? 1 : 0), (lineM ? 1 : 0), (lineR ? 1 : 0), (lineB ? 1 : 0));
+    printf("%d\n", pros::c::analogRead(LINE_B_PORT));
+    if(lineL)
+    {
+      LeftMotor.move_velocity(-LINE_MOVEMENT_SPEED);
+      RightMotor.move_velocity(LINE_MOVEMENT_SPEED);
+    }
+    else if(lineR)
+    {
+      LeftMotor.move_velocity(LINE_MOVEMENT_SPEED);
+      RightMotor.move_velocity(-LINE_MOVEMENT_SPEED);
+    }
+    else if(lineM && !lineB)
+    {
+      LeftMotor.move_velocity(LINE_MOVEMENT_SPEED);
+      RightMotor.move_velocity(LINE_MOVEMENT_SPEED);
+    }
+    else if(lineM && !lineL && !lineR && lineB && (pros::c::ultrasonicGet(SonarL) + pros::c::ultrasonicGet(SonarR)) / 2.0 <= dist)
+    {
+      resetMotors();
+      break;
+    }
+    else
+    {
+      LeftMotor.move_velocity(LINE_MOVEMENT_SPEED);
+      RightMotor.move_velocity(LINE_MOVEMENT_SPEED);
+    }
+  }
+  resetMotors();
+  /*while(pros::c::analogRead(LINE_L_PORT) < LINE_VALUE_THRESHOLD)
+  {
+    LeftMotor.move_velocity(LINE_MOVEMENT_SPEED);
+    RightMotor.move_velocity(-LINE_MOVEMENT_SPEED);
+  }
+  resetMotors();
+  double lDegrees = LeftMotor.get_position();
+  double rDegrees = RightMotor.get_position();
+  while(pros::c::analogRead(LINE_R_PORT) < LINE_VALUE_THRESHOLD)
+  {
+    LeftMotor.move_velocity(-LINE_MOVEMENT_SPEED);
+    RightMotor.move_velocity(LINE_MOVEMENT_SPEED);
+  }
+  resetMotors();
+  LeftMotor.move_absolute((LeftMotor.get_position() + lDegrees) / 2.0, LINE_MOVEMENT_SPEED);
+  RightMotor.move_absolute((RightMotor.get_position() + rDegrees) / 2.0, LINE_MOVEMENT_SPEED);*/
+  realign();
+  /*
+  //Move until the back sensor is at the base of the line
+  while(true)
+  {
+    lineL = pros::c::analogRead(LINE_L_PORT) >= LINE_VALUE_THRESHOLD;
+    lineM = pros::c::analogRead(LINE_M_PORT) >= LINE_VALUE_THRESHOLD;
+    lineR = pros::c::analogRead(LINE_R_PORT) >= LINE_VALUE_THRESHOLD;
+    lineB = pros::c::analogRead(LINE_B_PORT) >= LINE_VALUE_THRESHOLD;
+    printf("%d %d %d %d\n", (lineL ? 1 : 0), (lineM ? 1 : 0), (lineR ? 1 : 0), (lineB ? 1 : 0));
+    printf("%d\n", pros::c::analogRead(LINE_B_PORT));
+    if(lineL)
+    {
+      LeftMotor.move_velocity(-LINE_MOVEMENT_SPEED);
+      RightMotor.move_velocity(LINE_MOVEMENT_SPEED);
+    }
+    else if(lineR)
+    {
+      LeftMotor.move_velocity(LINE_MOVEMENT_SPEED);
+      RightMotor.move_velocity(-LINE_MOVEMENT_SPEED);
+    }
+    else if(!lineM)
+    {
+      LeftMotor.move_velocity(-LINE_MOVEMENT_SPEED);
+      RightMotor.move_velocity(-LINE_MOVEMENT_SPEED);
+    }
+    else if(lineM && lineB)
+    {
+      break;
+    }
+    else
+    {
+      LeftMotor.move_velocity(LINE_MOVEMENT_SPEED);
+      RightMotor.move_velocity(LINE_MOVEMENT_SPEED);
+    }
+  }
+  resetMotors();
+  while(true)
+  {
+    lineL = pros::c::analogRead(LINE_L_PORT) >= LINE_VALUE_THRESHOLD;
+    lineM = pros::c::analogRead(LINE_M_PORT) >= LINE_VALUE_THRESHOLD;
+    lineR = pros::c::analogRead(LINE_R_PORT) >= LINE_VALUE_THRESHOLD;
+    lineB = pros::c::analogRead(LINE_B_PORT) >= LINE_VALUE_THRESHOLD;
+    printf("%d %d %d %d\n", (lineL ? 1 : 0), (lineM ? 1 : 0), (lineR ? 1 : 0), (lineB ? 1 : 0));
+    printf("%d\n", pros::c::analogRead(LINE_B_PORT));
+    if(lineL)
+    {
+      LeftMotor.move_velocity(-LINE_MOVEMENT_SPEED);
+      RightMotor.move_velocity(LINE_MOVEMENT_SPEED);
+    }
+    else if(lineR)
+    {
+      LeftMotor.move_velocity(LINE_MOVEMENT_SPEED);
+      RightMotor.move_velocity(-LINE_MOVEMENT_SPEED);
+    }
+    else if(lineM && lineB)
+    {
+      LeftMotor.move_velocity(-LINE_MOVEMENT_SPEED);
+      RightMotor.move_velocity(-LINE_MOVEMENT_SPEED);
+    }
+    else if(lineM && !lineB)
+    {
+      break;
+    }
+    else
+    {
+      LeftMotor.move_velocity(LINE_MOVEMENT_SPEED);
+      RightMotor.move_velocity(LINE_MOVEMENT_SPEED);
+    }
+  }
+  resetMotors();
+  printf("Moving.\n");
+  move(REALIGN_LINE_FORWARD, LINE_MOVEMENT_SPEED);*/
+}
+void realignLine(double dist)
+{
+  realignLine(true, dist);
 }
 void closeClawOnBlock(int timeout)
 {

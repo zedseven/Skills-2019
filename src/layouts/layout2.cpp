@@ -26,9 +26,9 @@ void layout2()
   rotate(-90);
   //Blue Block A
   targetBlock = BlockType::Blue;
-  moveUntilDist(123, 30);
+  moveUntilDist(120, 30);
   rotate(-90);
-  findBlock();
+  findBlock(false);
   rotate(90);
   moveUntilDist(184, 30);
   rotate(-90);

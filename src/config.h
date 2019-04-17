@@ -1,13 +1,14 @@
 #pragma once
 
 //High-level Configuration
-#define LAYOUT_NUM 4
+#define LAYOUT_NUM 2
 #define TEST_MODE 0
 #define BLUE_BLOCK_LAMP_ON 1
 #define YELLOW_BLOCK_LAMP_ON 0
 #define RED_BLOCK_LAMP_ON 0
+#define LINE_MODE_ON 1
 
-//Motor Ports
+//Motor & Sensor Ports
 #define LEFT_MOTOR_PORT 20
 #define RIGHT_MOTOR_PORT 11
 #define CLAW_MOTOR_PORT 18
@@ -20,6 +21,10 @@
 #define SONAR_L_PORT_OUT 2
 #define SONAR_R_PORT_IN 3
 #define SONAR_R_PORT_OUT 4
+#define LINE_L_PORT 5
+#define LINE_M_PORT 6
+#define LINE_R_PORT 7
+#define LINE_B_PORT 8
 
 //Constants
 #define WIDTH_TO_DIST 7.81705
@@ -54,13 +59,15 @@ enum class MovementType { None, Left, Right, Forward, Backward };
 #define CLAW_MOVE_SPEED 40
 #define DROPOFF_DIST 12/*11*/
 #define DROPOFF_INITIAL_BACKWARD 14
-#define DROPOFF_FORWARD_BONUS 0/*11*/
+#define DROPOFF_FORWARD_BONUS 8/*11*/
 #define DROPOFF_FORWARD_BONUS_2 -2
 #define DROPOFF_MIN 90
 #define DROPOFF_MAX 130
 #define DROPOFF_MOVE_OFFSET 16/*14*/
 #define DROPOFF_SENSITIVITY 0.6
 #define LAMP_ON_SPEED 100
+#define LINE_MOVEMENT_SPEED 30
+#define LINE_VALUE_THRESHOLD 1000
 #define MOVEMENT_SPEED 60/*40*/
 #define MOVE_SENSITIVITY 5
 #define MOVE_UNTIL_SENSITIVITY 1.0
@@ -68,6 +75,8 @@ enum class MovementType { None, Left, Right, Forward, Backward };
 #define PICKUP_SENSITIVITY 1.0
 #define REALIGN_CUTOFF_MOTOR_DEG 70
 #define REALIGN_DIST 50.0
+#define REALIGN_LINE_BACKWARD -6
+#define REALIGN_LINE_FORWARD 7
 #define REALIGN_MAX_MOVES 50
 #define REALIGN_SENSITIVITY 0.2/*0.1*/
 #define REALIGN_SPEED 8/*5*/
@@ -102,6 +111,6 @@ enum class MovementType { None, Left, Right, Forward, Backward };
 #define SIG_INIT_BLUE_BLOCK BlockVision.signature_from_utility(SIG_BLUE_BLOCK, -3147, -2063, -2605, 9375, 13871, 11623, 4, 0)
 #define SIG_INIT_YELLOW_BLOCK BlockVision.signature_from_utility(SIG_YELLOW_BLOCK, -159, 223, 32, -4097, -3665, -3882, 5.9, 0)
 #define SIG_INIT_RED_BLOCK BlockVision.signature_from_utility(SIG_RED_BLOCK, 7013, 7607, 7310, -1371, -971, -1171, 5.6, 0)
-#define SIG_INIT_BLUE_FLOOR FloorVision.signature_from_utility(SIG_BLUE_FLOOR, -2341, -2007, -2174, 4039, 4551, 4295, 7, 0)
-#define SIG_INIT_YELLOW_FLOOR FloorVision.signature_from_utility(SIG_YELLOW_FLOOR, 3585, 3867, 3726, -4595, -4327, -4461, 5, 0)
-#define SIG_INIT_RED_FLOOR FloorVision.signature_from_utility(SIG_RED_FLOOR, 13229, 13873, 13551, -2107, -1579, -1843, 6.6, 0)
+#define SIG_INIT_BLUE_FLOOR FloorVision.signature_from_utility(SIG_BLUE_FLOOR, -4161, -3537, -3849, 5745, 6709, 6227, 10, 0)
+#define SIG_INIT_YELLOW_FLOOR FloorVision.signature_from_utility(SIG_YELLOW_FLOOR, 773, 1463, 1118, -4113, -3763, -3938, 7, 0)
+#define SIG_INIT_RED_FLOOR FloorVision.signature_from_utility(SIG_RED_FLOOR, 9007, 9615, 9311, -1311, -953, -1132, 9, 0)

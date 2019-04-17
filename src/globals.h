@@ -34,3 +34,5 @@ extern std::vector<lv_obj_t *> screenObjects;
 extern int deliveredBlues;
 extern int deliveredReds;
 extern int deliveredYellows;
+
+void initSensors();
