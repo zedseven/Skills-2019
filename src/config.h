@@ -59,8 +59,8 @@ enum class MovementType { None, Left, Right, Forward, Backward };
 #define CLAW_MOVE_SPEED 40
 #define DROPOFF_DIST 12/*11*/
 #define DROPOFF_INITIAL_BACKWARD 14
-#define DROPOFF_FORWARD_BONUS 8/*11*/
-#define DROPOFF_FORWARD_BONUS_2 -2
+#define DROPOFF_FORWARD_BONUS 14/*11*/
+#define DROPOFF_FORWARD_BONUS_2 10
 #define DROPOFF_MIN 90
 #define DROPOFF_MAX 130
 #define DROPOFF_MOVE_OFFSET 16/*14*/
@@ -77,6 +77,8 @@ enum class MovementType { None, Left, Right, Forward, Backward };
 #define REALIGN_DIST 50.0
 #define REALIGN_LINE_BACKWARD -6
 #define REALIGN_LINE_FORWARD 7
+#define REALIGN_LINE_MOVE_DEG 100 /* Motor degrees */
+#define REALIGN_LINE_TURN_DEG 135 /* Robot degrees / 2 */
 #define REALIGN_MAX_MOVES 50
 #define REALIGN_SENSITIVITY 0.2/*0.1*/
 #define REALIGN_SPEED 8/*5*/

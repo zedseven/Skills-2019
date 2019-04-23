@@ -263,7 +263,41 @@ void realignLine(bool leftDefault, double dist)
     }
     else
     {
-      if(leftDefault) //If we suspect we'll be to the left of the line (turn right) more frequently, etc.
+      //Recovery operation
+      resetMotors();
+      double lDeg = LeftMotor.get_position();
+      double rDeg = RightMotor.get_position();
+      //Turn left until we see something or have turned REALIGN_LINE_TURN_DEG robot degrees
+      while(pros::c::analogRead(LINE_L_PORT) < LINE_VALUE_THRESHOLD && pros::c::analogRead(LINE_M_PORT) < LINE_VALUE_THRESHOLD && pros::c::analogRead(LINE_R_PORT) < LINE_VALUE_THRESHOLD && (fabs(LeftMotor.get_position() - lDeg) /*+ fabs(RightMotor.get_position() - rDeg)*/) / (/*2.0 **/ ROBOT_TO_MOTOR_DEG) < REALIGN_LINE_TURN_DEG)
+      {
+        LeftMotor.move_velocity(-LINE_MOVEMENT_SPEED);
+        RightMotor.move_velocity(/*LINE_MOVEMENT_SPEED*/0);
+      }
+      if(pros::c::analogRead(LINE_L_PORT) >= LINE_VALUE_THRESHOLD || pros::c::analogRead(LINE_M_PORT) >= LINE_VALUE_THRESHOLD || pros::c::analogRead(LINE_R_PORT) >= LINE_VALUE_THRESHOLD)
+        continue;
+      LeftMotor.move_absolute(lDeg, LINE_MOVEMENT_SPEED);
+      await1Motor(LeftMotor, lDeg, MOVE_SENSITIVITY, 10000);
+      lDeg = LeftMotor.get_position();
+      rDeg = RightMotor.get_position();
+      //Turn right until we see something or have turned REALIGN_LINE_TURN_DEG robot degrees
+      while(pros::c::analogRead(LINE_L_PORT) < LINE_VALUE_THRESHOLD && pros::c::analogRead(LINE_M_PORT) < LINE_VALUE_THRESHOLD && pros::c::analogRead(LINE_R_PORT) < LINE_VALUE_THRESHOLD && (/*fabs(LeftMotor.get_position() - lDeg) +*/ fabs(RightMotor.get_position() - rDeg)) / (/*2.0 **/ ROBOT_TO_MOTOR_DEG) < REALIGN_LINE_TURN_DEG)
+      {
+        LeftMotor.move_velocity(/*LINE_MOVEMENT_SPEED*/0);
+        RightMotor.move_velocity(-LINE_MOVEMENT_SPEED);
+      }
+      if(pros::c::analogRead(LINE_L_PORT) >= LINE_VALUE_THRESHOLD || pros::c::analogRead(LINE_M_PORT) >= LINE_VALUE_THRESHOLD || pros::c::analogRead(LINE_R_PORT) >= LINE_VALUE_THRESHOLD)
+        continue;
+      RightMotor.move_absolute(rDeg, LINE_MOVEMENT_SPEED);
+      await1Motor(RightMotor, rDeg, MOVE_SENSITIVITY, 10000);
+      lDeg = LeftMotor.get_position();
+      rDeg = RightMotor.get_position();
+      //Move forward until we see something or have moved REALIGN_LINE_MOVE_DEG motor degrees
+      while(pros::c::analogRead(LINE_L_PORT) < LINE_VALUE_THRESHOLD && pros::c::analogRead(LINE_M_PORT) < LINE_VALUE_THRESHOLD && pros::c::analogRead(LINE_R_PORT) < LINE_VALUE_THRESHOLD && (fabs(LeftMotor.get_position() - lDeg) + fabs(RightMotor.get_position() - rDeg)) / 2.0 < REALIGN_LINE_MOVE_DEG)
+      {
+        LeftMotor.move_velocity(LINE_MOVEMENT_SPEED);
+        RightMotor.move_velocity(LINE_MOVEMENT_SPEED);
+      }
+      /*if(leftDefault) //If we suspect we'll be to the left of the line (turn right) more frequently, etc.
       {
         LeftMotor.move_velocity(-LINE_MOVEMENT_SPEED);
         RightMotor.move_velocity(LINE_MOVEMENT_SPEED);
@@ -272,7 +306,7 @@ void realignLine(bool leftDefault, double dist)
       {
         LeftMotor.move_velocity(LINE_MOVEMENT_SPEED);
         RightMotor.move_velocity(-LINE_MOVEMENT_SPEED);
-      }
+      }*/
     }
   }
   while(true)
@@ -281,8 +315,9 @@ void realignLine(bool leftDefault, double dist)
     lineM = pros::c::analogRead(LINE_M_PORT) >= LINE_VALUE_THRESHOLD;
     lineR = pros::c::analogRead(LINE_R_PORT) >= LINE_VALUE_THRESHOLD;
     lineB = pros::c::analogRead(LINE_B_PORT) >= LINE_VALUE_THRESHOLD;
-    printf("%d %d %d %d\n", (lineL ? 1 : 0), (lineM ? 1 : 0), (lineR ? 1 : 0), (lineB ? 1 : 0));
-    printf("%d\n", pros::c::analogRead(LINE_B_PORT));
+    //printf("%f\n", (pros::c::ultrasonicGet(SonarL) + pros::c::ultrasonicGet(SonarR)) / 20.0);
+    //printf("%d %d %d %d\n", (lineL ? 1 : 0), (lineM ? 1 : 0), (lineR ? 1 : 0), (lineB ? 1 : 0));
+    //printf("%d\n", pros::c::analogRead(LINE_B_PORT));
     if(lineL)
     {
       LeftMotor.move_velocity(-LINE_MOVEMENT_SPEED);
@@ -293,12 +328,12 @@ void realignLine(bool leftDefault, double dist)
       LeftMotor.move_velocity(LINE_MOVEMENT_SPEED);
       RightMotor.move_velocity(-LINE_MOVEMENT_SPEED);
     }
-    else if(lineM && !lineB)
+    /*else if(lineM && !lineB)
     {
       LeftMotor.move_velocity(LINE_MOVEMENT_SPEED);
       RightMotor.move_velocity(LINE_MOVEMENT_SPEED);
-    }
-    else if(lineM && !lineL && !lineR && lineB && (pros::c::ultrasonicGet(SonarL) + pros::c::ultrasonicGet(SonarR)) / 2.0 <= dist)
+    }*/
+    else if(lineM && !lineL && !lineR /*&& lineB*/ && fmin(pros::c::ultrasonicGet(SonarL), pros::c::ultrasonicGet(SonarR)) / 10.0 <= dist / 2.0)
     {
       resetMotors();
       break;
@@ -399,6 +434,7 @@ void realignLine(bool leftDefault, double dist)
   resetMotors();
   printf("Moving.\n");
   move(REALIGN_LINE_FORWARD, LINE_MOVEMENT_SPEED);*/
+  moveUntilDist(dist, 40);
 }
 void realignLine(double dist)
 {

@@ -22,9 +22,9 @@ void autonomous()
     printf("l: %f r: %f\n", lDist, rDist);
     pros::delay(50);
   }*/
-  realignLine(17);
-  resetMotors();
-  return;
+  /*targetBlock = BlockType::Red;
+  findBlock();
+  return;*/
   switch(LAYOUT_NUM)
   {
     case 1:

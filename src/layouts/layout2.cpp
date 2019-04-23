@@ -26,7 +26,7 @@ void layout2()
   rotate(-90);
   //Blue Block A
   targetBlock = BlockType::Blue;
-  moveUntilDist(120, 30);
+  moveUntilDist(114, 30);
   rotate(-90);
   findBlock(false);
   rotate(90);
@@ -40,7 +40,7 @@ void layout2()
   //Yellow Block A
   targetBlock = BlockType::Yellow;
   rotate(90);
-  moveUntilDist(88, 30);
+  moveUntilDist(85, 30);
   rotate(90);
   findBlock();
   rotate(-90);
@@ -55,7 +55,7 @@ void layout2()
   //move(DROPOFF_MOVE_OFFSET);
   //Blue Block B
   targetBlock = BlockType::Blue;
-  rotate(-91);
+  rotate(-90);
   move(40);
   rotate(90);
   realign();
@@ -82,7 +82,8 @@ void layout2()
   realign();
   move(-40);
   //moveUntilDist(123, 30);
-  move(-55);
+  //move(-55);
+  move(-60);
   //realign();
   rotate(-90);
   findBlock();
@@ -93,22 +94,27 @@ void layout2()
   rotate(-90);
   //moveUntilDist(55, 30);
   move(95 + DROPOFF_MOVE_OFFSET);
+  rotate(90);
+  realign();
+  move(-20);
   rotate(-45);
   findPad();
   rotate(45);
   move(-DROPOFF_MOVE_OFFSET);
   //Yellow Block B
   targetBlock = BlockType::Yellow;
-  rotate(-90);
+  rotate(180);
   //move(20);
-  moveUntilDist(184, 30);
+  //moveUntilDist(184, 30);
+  moveUntilDist(150, 30);
   rotate(-90);
+  move(25);
   findBlock();
   rotate(90);
   moveUntilDist(55, 30);
   rotate(90);
-  moveUntilDist(184, 30);
-  rotate(180);
+  moveUntilDist(174, 30);
+  rotate(-180);
   move(DROPOFF_MOVE_OFFSET);
   rotate(45);
   findPad();
