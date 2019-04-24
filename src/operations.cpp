@@ -17,7 +17,7 @@ void findBlock(bool leftDefault) //Looking for a block
     //moveUntilDist(17, 80);
     resetMotors();
     pickupBlock();
-    moveUntilDist(25, 80);
+    moveUntilDist(25, 80, false);
     resetMotors();
   }
   else //Use the vision sensor to find the block

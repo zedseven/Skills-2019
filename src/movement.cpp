@@ -197,7 +197,7 @@ void realign()
   resetMotors();
   printf("Started with (%f, %f), and ended with (%f, %f) after %d movement%s.\n", lStartDeg, rStartDeg, LeftMotor.get_position(), RightMotor.get_position(), realignNum, (realignNum != 1 ? "s" : ""));
 }
-void moveUntilDist(double targetDist, double moveIncrement)
+void moveUntilDist(double targetDist, double moveIncrement, bool realignFinal)
 {
   double lDist;
   double rDist;
@@ -225,7 +225,8 @@ void moveUntilDist(double targetDist, double moveIncrement)
   }
   resetMotors();
   //Brain.Screen.printAt(50, 120, "Done moving.");
-  realign();
+  if(realignFinal)
+    realign();
 }
 void realignLine(bool leftDefault, double dist)
 {

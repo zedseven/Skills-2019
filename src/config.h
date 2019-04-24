@@ -61,8 +61,8 @@ enum class MovementType { None, Left, Right, Forward, Backward };
 #define DROPOFF_INITIAL_BACKWARD 14
 #define DROPOFF_FORWARD_BONUS 14/*11*/
 #define DROPOFF_FORWARD_BONUS_2 10
-#define DROPOFF_MIN 90
-#define DROPOFF_MAX 130
+#define DROPOFF_MIN 40/*90*/
+#define DROPOFF_MAX 80/*130*/
 #define DROPOFF_MOVE_OFFSET 16/*14*/
 #define DROPOFF_SENSITIVITY 0.6
 #define LAMP_ON_SPEED 100

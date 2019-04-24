@@ -15,7 +15,7 @@ void layout2()
   rotate(95);
   findBlock();
   rotate(-95);
-  moveUntilDist(56, 30);
+  moveUntilDist(64, 30);//56, 30);
   rotate(-90);
   realign();
   move(DROPOFF_MOVE_OFFSET);
@@ -30,7 +30,7 @@ void layout2()
   rotate(-90);
   findBlock(false);
   rotate(90);
-  moveUntilDist(184, 30);
+  moveUntilDist(176, 30);//184, 30);
   rotate(-90);
   moveUntilDist(55, 30);//55
   rotate(-45);
@@ -40,7 +40,7 @@ void layout2()
   //Yellow Block A
   targetBlock = BlockType::Yellow;
   rotate(90);
-  moveUntilDist(85, 30);
+  moveUntilDist(85, 30);//82, 30);
   rotate(90);
   findBlock();
   rotate(-90);

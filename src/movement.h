@@ -20,7 +20,7 @@ void rotate(double rotationDeg);
 void realign();
 void realignLine(bool leftDefault, double dist);
 void realignLine(double dist);
-void moveUntilDist(double targetDist, double moveIncrement);
+void moveUntilDist(double targetDist, double moveIncrement, bool realignFinal = true);
 void closeClawOnBlock();
 void openClaw();
 void openClawRelaxed();
