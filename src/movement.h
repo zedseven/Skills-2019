@@ -22,7 +22,7 @@ void realignLine(bool leftDefault, double dist);
 void realignLine(double dist);
 void moveUntilDist(double targetDist, double moveIncrement, bool realignFinal = true);
 void closeClawOnBlock();
-void openClaw();
+void openClawTensed();
 void openClawRelaxed();
 void pickupBlock();
 void lowerBlock();

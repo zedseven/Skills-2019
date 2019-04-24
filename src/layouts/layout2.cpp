@@ -28,16 +28,85 @@ void layout2()
   targetBlock = BlockType::Blue;
   moveUntilDist(114, 30);
   rotate(-90);
+  move(10);
   findBlock(false);
   rotate(90);
-  moveUntilDist(176, 30);//184, 30);
+  moveUntilDist(180, 30);//184, 30);
   rotate(-90);
   moveUntilDist(55, 30);//55
+  rotate(-90);
+  move(-5);
+  rotate(45);
+  findPad();
+  rotate(45);
+  move(-DROPOFF_MOVE_OFFSET + 2);
+  //Blue Block B
+  targetBlock = BlockType::Blue;
+  rotate(90);
+  moveUntilDist(150, 30);
+  rotate(90);
+  findBlock();
+  rotate(-90);
+  moveUntilDist(176, 30);
+  rotate(-90);
+  move(DROPOFF_MOVE_OFFSET + 3);
   rotate(-45);
   findPad();
   rotate(45);
   move(-DROPOFF_MOVE_OFFSET);
+  //Red Block B
+  targetBlock = BlockType::Red;
+  rotate(90);
+  moveUntilDist(115, 30);
+  rotate(90);
+  move(15);
+  findBlock();
+  rotate(-90);
+  moveUntilDist(55, 30);
+  rotate(90);
+  moveUntilDist(64, 30);
+  rotate(-90);
+  moveUntilDist(174, 30);
+  rotate(90);
+  move(DROPOFF_MOVE_OFFSET - 2);
+  rotate(45);
+  findPad();
+  rotate(-45);
+  move(-DROPOFF_MOVE_OFFSET);
   //Yellow Block A
+  targetBlock = BlockType::Yellow;
+  rotate(-90);
+  moveUntilDist(148, 30);
+  rotate(-90);
+  move(15);
+  findBlock();
+  rotate(90);
+  moveUntilDist(55, 30);
+  rotate(90);
+  moveUntilDist(174, 30);
+  rotate(-180);
+  move(DROPOFF_MOVE_OFFSET - 5);
+  rotate(45);
+  findPad();
+  rotate(-45);
+  move(-DROPOFF_MOVE_OFFSET - 2);
+  //Yellow Block B
+  targetBlock = BlockType::Yellow;
+  rotate(90);
+  moveUntilDist(81, 30);
+  rotate(90);
+  move(7);
+  findBlock();
+  rotate(-90);
+  moveUntilDist(55, 30);
+  rotate(-90);
+  move(DROPOFF_MOVE_OFFSET);
+  rotate(45);
+  findPad();
+  rotate(-45);
+  move(-DROPOFF_MOVE_OFFSET);
+
+  /*//Yellow Block A
   targetBlock = BlockType::Yellow;
   rotate(90);
   moveUntilDist(85, 30);//82, 30);
@@ -89,7 +158,7 @@ void layout2()
   findBlock();
   rotate(90);
   //moveUntilDist(55, 30);
-  move(88.5/*58.5*/);
+  move(88.5/*58.5*-/);
   realign();
   rotate(-90);
   //moveUntilDist(55, 30);
@@ -117,5 +186,5 @@ void layout2()
   rotate(-180);
   move(DROPOFF_MOVE_OFFSET);
   rotate(45);
-  findPad();
+  findPad();*/
 }

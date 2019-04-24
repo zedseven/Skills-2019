@@ -17,7 +17,8 @@ void findBlock(bool leftDefault) //Looking for a block
     //moveUntilDist(17, 80);
     resetMotors();
     pickupBlock();
-    moveUntilDist(25, 80, false);
+    //moveUntilDist(25, 80, false);
+    move(-8);
     resetMotors();
   }
   else //Use the vision sensor to find the block
@@ -242,8 +243,9 @@ void findPad() //Have a block, looking for the floor tile to deposit it at
             move(-DROPOFF_INITIAL_BACKWARD);
             lowerBlock();
             move(DROPOFF_INITIAL_BACKWARD + DROPOFF_FORWARD_BONUS_2);
-            openClawRelaxed();
+            openClawTensed();
             raiseArms();
+            openClawRelaxed();
             move(-DROPOFF_FORWARD_BONUS_2);
           }
           else

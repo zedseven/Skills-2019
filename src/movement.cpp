@@ -501,7 +501,8 @@ void dropoffBlock()
 {
   closeClawOnBlock(300);
   lowerBlock();
-  openClawRelaxed();
+  openClawTensed();
   raiseArms();
+  openClawRelaxed();
   holdingBlock = false;
 }
