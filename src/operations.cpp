@@ -157,7 +157,7 @@ void findBlock()
   findBlock(true);
 }
 
-void findPad() //Have a block, looking for the floor tile to deposit it at
+void findPad(double dropoffForwardBonus) //Have a block, looking for the floor tile to deposit it at
 {
   if(TEST_MODE == 1)
   {
@@ -242,11 +242,11 @@ void findPad() //Have a block, looking for the floor tile to deposit it at
           {
             move(-DROPOFF_INITIAL_BACKWARD);
             lowerBlock();
-            move(DROPOFF_INITIAL_BACKWARD + DROPOFF_FORWARD_BONUS_2);
+            move(DROPOFF_INITIAL_BACKWARD + dropoffForwardBonus);
             openClawTensed();
             raiseArms();
             openClawRelaxed();
-            move(-DROPOFF_FORWARD_BONUS_2);
+            move(-dropoffForwardBonus);
           }
           else
           {

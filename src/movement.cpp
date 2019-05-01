@@ -114,6 +114,7 @@ void realign()
   int realignNum = 1;
   double lStartDeg = LeftMotor.get_position();
   double rStartDeg = RightMotor.get_position();
+  bool resetRot = false;
   while(realignNum <= REALIGN_MAX_MOVES)
   {
     pros::delay(50/*100*/);
@@ -130,6 +131,11 @@ void realign()
     rBand = fmax(0.2, (((lDist + rDist) / 2.0) / REALIGN_DIST) * 0.125 + REALIGN_SENSITIVITY) * (pow(fmax(1.0, realignNum / 3.0), 0.1));
     //Brain.Screen.printAt(100, 220, "rBand: %f", rBand);
     double distDiff = rDist - lDist;
+    if(distDiff >= REALIGN_CUTOFF_DIFF)
+    {
+      resetRot = true;
+      break;
+    }
     if(distDiff > rBand) //Right is further away - turn left
     {
       LeftMotor.move_velocity(-REALIGN_SPEED);
@@ -185,7 +191,7 @@ void realign()
         break;
     }
     //To avoid being completely thrown off - basically just cutting our losses if the realign can't work
-    if((fabs(LeftMotor.get_position() - lStartDeg) + fabs(RightMotor.get_position() - rStartDeg)) / 2.0 > REALIGN_CUTOFF_MOTOR_DEG)
+    if(resetRot || (fabs(LeftMotor.get_position() - lStartDeg) + fabs(RightMotor.get_position() - rStartDeg)) / 2.0 > REALIGN_CUTOFF_MOTOR_DEG)
     {
       LeftMotor.move_absolute(lStartDeg, REALIGN_SPEED);
       RightMotor.move_absolute(rStartDeg, REALIGN_SPEED);
@@ -213,7 +219,7 @@ void moveUntilDist(double targetDist, double moveIncrement, bool realignFinal)
       rDist = pros::c::ultrasonicGet(SonarR) / 10.0;
       //printf("lDist: %f rDist: %f\n", lDist, rDist);
     }
-    measureDist = (lDist + rDist) / 2.0;
+    measureDist = (fabs(lDist - rDist) < REALIGN_CUTOFF_DIFF / 10.0 ? (lDist + rDist) / 2.0 : fmin(lDist, rDist));
     distDiff = measureDist - targetDist;
     realign();
     if(distDiff > MOVE_UNTIL_SENSITIVITY)
@@ -234,6 +240,7 @@ void realignLine(bool leftDefault, double dist)
   bool lineM = false;
   bool lineR = false;
   bool lineB = false;
+  bool lastArc = false; //false = left, true = right
   //Align horizontally
   while(true)
   {
@@ -243,15 +250,28 @@ void realignLine(bool leftDefault, double dist)
     lineB = pros::c::analogRead(LINE_B_PORT) >= LINE_VALUE_THRESHOLD;
     printf("%d %d %d %d\n", (lineL ? 1 : 0), (lineM ? 1 : 0), (lineR ? 1 : 0), (lineB ? 1 : 0));
     printf("%d\n", pros::c::analogRead(LINE_B_PORT));
-    if(lineL)
+    if(lineL && lineR)
     {
-      LeftMotor.move_velocity(-LINE_MOVEMENT_SPEED);
+      if(!lastArc) //Left
+      {
+        LeftMotor.move_velocity(LINE_MOVEMENT_SPEED);
+        RightMotor.move_velocity(-LINE_MOVEMENT_SPEED * 0.5);
+      }
+      else //Right
+      {
+        LeftMotor.move_velocity(-LINE_MOVEMENT_SPEED * 0.5);
+        RightMotor.move_velocity(LINE_MOVEMENT_SPEED);
+      }
+    }
+    else if(lineL)
+    {
+      LeftMotor.move_velocity(0);
       RightMotor.move_velocity(LINE_MOVEMENT_SPEED);
     }
     else if(lineR)
     {
       LeftMotor.move_velocity(LINE_MOVEMENT_SPEED);
-      RightMotor.move_velocity(-LINE_MOVEMENT_SPEED);
+      RightMotor.move_velocity(0);
     }
     else if(lineM && !lineB)
     {
@@ -268,27 +288,43 @@ void realignLine(bool leftDefault, double dist)
       resetMotors();
       double lDeg = LeftMotor.get_position();
       double rDeg = RightMotor.get_position();
+      lastArc = false;
       //Turn left until we see something or have turned REALIGN_LINE_TURN_DEG robot degrees
       while(pros::c::analogRead(LINE_L_PORT) < LINE_VALUE_THRESHOLD && pros::c::analogRead(LINE_M_PORT) < LINE_VALUE_THRESHOLD && pros::c::analogRead(LINE_R_PORT) < LINE_VALUE_THRESHOLD && (fabs(LeftMotor.get_position() - lDeg) /*+ fabs(RightMotor.get_position() - rDeg)*/) / (/*2.0 **/ ROBOT_TO_MOTOR_DEG) < REALIGN_LINE_TURN_DEG)
       {
-        LeftMotor.move_velocity(-LINE_MOVEMENT_SPEED);
-        RightMotor.move_velocity(/*LINE_MOVEMENT_SPEED*/0);
+        LeftMotor.move_velocity(-MOVEMENT_SPEED);
+        RightMotor.move_velocity(/*MOVEMENT_SPEED*/0);
       }
       if(pros::c::analogRead(LINE_L_PORT) >= LINE_VALUE_THRESHOLD || pros::c::analogRead(LINE_M_PORT) >= LINE_VALUE_THRESHOLD || pros::c::analogRead(LINE_R_PORT) >= LINE_VALUE_THRESHOLD)
+      {
+        rotate(fabs(LeftMotor.get_position() - lDeg) / (2 * ROBOT_TO_MOTOR_DEG));
+        /*printf("mr: %f\n", fabs(LeftMotor.get_position() - lDeg) / (2 * ROBOT_TO_MOTOR_DEG));
+        printf("ma: %f\n", (acos(-1) / 180.0) * fabs(LeftMotor.get_position() - lDeg) / (2 * ROBOT_TO_MOTOR_DEG));
+        printf("mm: %f\n", SENSOR_TO_WHEEL_DIST * sin((acos(-1) / 180.0) * fabs(LeftMotor.get_position() - lDeg) / (2 * ROBOT_TO_MOTOR_DEG)));*/
+        move(SENSOR_TO_WHEEL_DIST * sin((acos(-1) / 180.0) * fabs(LeftMotor.get_position() - lDeg) / (2 * ROBOT_TO_MOTOR_DEG)));
         continue;
-      LeftMotor.move_absolute(lDeg, LINE_MOVEMENT_SPEED);
+      }
+      LeftMotor.move_absolute(lDeg, MOVEMENT_SPEED);
       await1Motor(LeftMotor, lDeg, MOVE_SENSITIVITY, 10000);
       lDeg = LeftMotor.get_position();
       rDeg = RightMotor.get_position();
+      lastArc = true;
       //Turn right until we see something or have turned REALIGN_LINE_TURN_DEG robot degrees
       while(pros::c::analogRead(LINE_L_PORT) < LINE_VALUE_THRESHOLD && pros::c::analogRead(LINE_M_PORT) < LINE_VALUE_THRESHOLD && pros::c::analogRead(LINE_R_PORT) < LINE_VALUE_THRESHOLD && (/*fabs(LeftMotor.get_position() - lDeg) +*/ fabs(RightMotor.get_position() - rDeg)) / (/*2.0 **/ ROBOT_TO_MOTOR_DEG) < REALIGN_LINE_TURN_DEG)
       {
-        LeftMotor.move_velocity(/*LINE_MOVEMENT_SPEED*/0);
-        RightMotor.move_velocity(-LINE_MOVEMENT_SPEED);
+        LeftMotor.move_velocity(/*MOVEMENT_SPEED*/0);
+        RightMotor.move_velocity(-MOVEMENT_SPEED);
       }
       if(pros::c::analogRead(LINE_L_PORT) >= LINE_VALUE_THRESHOLD || pros::c::analogRead(LINE_M_PORT) >= LINE_VALUE_THRESHOLD || pros::c::analogRead(LINE_R_PORT) >= LINE_VALUE_THRESHOLD)
+      {
+        rotate(-fabs(RightMotor.get_position() - rDeg) / (2 * ROBOT_TO_MOTOR_DEG));
+        /*printf("mr: %f\n", fabs(RightMotor.get_position() - rDeg) / (2 * ROBOT_TO_MOTOR_DEG));
+        printf("ma: %f\n", (acos(-1) / 180.0) * fabs(RightMotor.get_position() - rDeg) / (2 * ROBOT_TO_MOTOR_DEG));
+        printf("mm: %f\n", SENSOR_TO_WHEEL_DIST * sin((acos(-1) / 180.0) * fabs(RightMotor.get_position() - rDeg) / (2 * ROBOT_TO_MOTOR_DEG)));*/
+        move(SENSOR_TO_WHEEL_DIST * sin((acos(-1) / 180.0) * fabs(RightMotor.get_position() - rDeg) / (2 * ROBOT_TO_MOTOR_DEG)));
         continue;
-      RightMotor.move_absolute(rDeg, LINE_MOVEMENT_SPEED);
+      }
+      RightMotor.move_absolute(rDeg, MOVEMENT_SPEED);
       await1Motor(RightMotor, rDeg, MOVE_SENSITIVITY, 10000);
       lDeg = LeftMotor.get_position();
       rDeg = RightMotor.get_position();

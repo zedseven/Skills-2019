@@ -1,7 +1,7 @@
 #pragma once
 
 //High-level Configuration
-#define LAYOUT_NUM 2
+#define LAYOUT_NUM 6
 #define TEST_MODE 0
 #define BLUE_BLOCK_LAMP_ON 1
 #define YELLOW_BLOCK_LAMP_ON 0
@@ -73,15 +73,17 @@ enum class MovementType { None, Left, Right, Forward, Backward };
 #define MOVE_UNTIL_SENSITIVITY 1.0
 #define PICKUP_DIST 23
 #define PICKUP_SENSITIVITY 1.0
+#define REALIGN_CUTOFF_DIFF 200
 #define REALIGN_CUTOFF_MOTOR_DEG 70
 #define REALIGN_DIST 50.0
 #define REALIGN_LINE_BACKWARD -6
 #define REALIGN_LINE_FORWARD 7
 #define REALIGN_LINE_MOVE_DEG 100 /* Motor degrees */
-#define REALIGN_LINE_TURN_DEG 135 /* Robot degrees / 2 */
+#define REALIGN_LINE_TURN_DEG 180/*135*/ /* Robot degrees / 2 */
 #define REALIGN_MAX_MOVES 50
 #define REALIGN_SENSITIVITY 0.2/*0.1*/
 #define REALIGN_SPEED 8/*5*/
+#define SENSOR_TO_WHEEL_DIST 22/*15*//*12*/ /* cm */
 #define SNAPSHOT_OBJ_COUNT 10
 #define SPIN_UNTIL_MIN_MSEC 400
 #define VISION_BLOCK_WIFI_ON 0
@@ -99,7 +101,7 @@ enum class MovementType { None, Left, Right, Forward, Backward };
 #define VISION_RED_BLOCK_EXPOSURE 40/*70*//*110*//*94*/
 #define VISION_BLUE_FLOOR_EXPOSURE 60
 #define VISION_YELLOW_FLOOR_EXPOSURE 60
-#define VISION_RED_FLOOR_EXPOSURE 60
+#define VISION_RED_FLOOR_EXPOSURE 44
 
 //Vision Sensor Signature Constants
 #define SIG_BLUE_BLOCK 1
@@ -115,4 +117,4 @@ enum class MovementType { None, Left, Right, Forward, Backward };
 #define SIG_INIT_RED_BLOCK BlockVision.signature_from_utility(SIG_RED_BLOCK, 7013, 7607, 7310, -1371, -971, -1171, 5.6, 0)
 #define SIG_INIT_BLUE_FLOOR FloorVision.signature_from_utility(SIG_BLUE_FLOOR, -4161, -3537, -3849, 5745, 6709, 6227, 10, 0)
 #define SIG_INIT_YELLOW_FLOOR FloorVision.signature_from_utility(SIG_YELLOW_FLOOR, 773, 1463, 1118, -4113, -3763, -3938, 7, 0)
-#define SIG_INIT_RED_FLOOR FloorVision.signature_from_utility(SIG_RED_FLOOR, 9007, 9615, 9311, -1311, -953, -1132, 9, 0)
+#define SIG_INIT_RED_FLOOR FloorVision.signature_from_utility(SIG_RED_FLOOR, 8057, 9309, 8683, -1365, -881, -1123, 9, 0)

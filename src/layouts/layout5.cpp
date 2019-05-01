@@ -18,7 +18,7 @@ void layout5()
   moveUntilDist(50, 50);
   rotate(90);
   realign();
-  move(-40);
+  move(-33);
   realign();
   rotate(135);
   move(20);
@@ -37,7 +37,7 @@ void layout5()
   move(-20);
   rotate(45);
   realign();
-  move(-40);
+  move(-33);
   realign();
   rotate(135);
   move(20);
@@ -47,7 +47,7 @@ void layout5()
   realign();
   //Red Block A
   targetBlock = BlockType::Red;
-  move(-30);
+  move(-27);
   realign();
   rotate(-90);
   move(20);
@@ -61,15 +61,15 @@ void layout5()
   move(70);
   moveUntilDist(50, 50);
   rotate(-90);
-  move(-30);
+  move(-15);
   rotate(-135);
-  move(20);
+  move(25);
   findPad();
-  move(-20);
+  move(-25);
   rotate(135);
   //Red Block B
   targetBlock = BlockType::Red;
-  move(-20);
+  move(-29);
   realign();
   rotate(90);
   move(20);
@@ -77,7 +77,7 @@ void layout5()
   move(-20);
   rotate(-90);
   realign();
-  move(20);
+  move(22);
   realign();
   rotate(-135);
   move(20);
@@ -87,14 +87,14 @@ void layout5()
   //Yellow Block A
   targetBlock = BlockType::Yellow;
   move(90);
-  moveUntilDist(50, 50);
+  moveUntilDist(51, 50);
   rotate(-45);
   move(20);
   findBlock();
   move(-20);
   rotate(135);
   move(70);
-  moveUntilDist(122, 50);
+  moveUntilDist(118, 50);
   rotate(90);
   move(-30);
   findPad();
@@ -115,9 +115,7 @@ void layout5()
   rotate(-90);
   moveUntilDist(30, 50);
   rotate(-90);
-  move(55);
+  move(62);
   rotate(-90);
-  move(30);
-  findPad();
-  move(-30);
+  findPad(10);
 }
