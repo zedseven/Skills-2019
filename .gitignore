@@ -33,3 +33,6 @@
 
 .vscode/
 bin/
+
+!firmware/
+!include/
