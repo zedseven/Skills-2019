@@ -34,5 +34,5 @@
 .vscode/
 bin/
 
-!firmware/
-!include/
+!firmware/*
+!include/*
