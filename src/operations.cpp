@@ -40,6 +40,7 @@ void findBlock(bool leftDefault) //Looking for a block
     //Calibrate the vision sensor for the given block colour
     //calibrateVisionExposure(BlockVision, blockTypeToBlockSig(targetBlock), blockVisionObjects);
     setBlockVisionExposure(targetBlock);
+    setBlockVisionWhiteBalance(targetBlock);
 
     int numSights = 0; //Number of times the block has been seen in a row as being ready to pick up
     while(!finished)
@@ -192,6 +193,7 @@ void findPad(double dropoffForwardBonus) //Have a block, looking for the floor t
   trackedMovements.push_back(std::make_tuple(MovementType::None, LeftMotor.get_position(), RightMotor.get_position()));
 
   setFloorVisionExposure(targetBlock);
+  setFloorVisionWhiteBalance(targetBlock);
 
   while(!finished)
   {

@@ -248,8 +248,8 @@ void realignLine(bool leftDefault, double dist)
     lineM = pros::c::analogRead(LINE_M_PORT) >= LINE_VALUE_THRESHOLD;
     lineR = pros::c::analogRead(LINE_R_PORT) >= LINE_VALUE_THRESHOLD;
     lineB = pros::c::analogRead(LINE_B_PORT) >= LINE_VALUE_THRESHOLD;
-    printf("%d %d %d %d\n", (lineL ? 1 : 0), (lineM ? 1 : 0), (lineR ? 1 : 0), (lineB ? 1 : 0));
-    printf("%d\n", pros::c::analogRead(LINE_B_PORT));
+    //printf("%d %d %d %d\n", (lineL ? 1 : 0), (lineM ? 1 : 0), (lineR ? 1 : 0), (lineB ? 1 : 0));
+    //printf("%d\n", pros::c::analogRead(LINE_B_PORT));
     if(lineL && lineR)
     {
       if(!lastArc) //Left

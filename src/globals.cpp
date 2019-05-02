@@ -3,6 +3,7 @@
 #include "config.h"
 #include "api.h"
 #include "pros/api_legacy.h"
+#include "pros/vision.hpp"
 
 //Motors and Sensors
 pros::Motor LeftMotor(LEFT_MOTOR_PORT, MOTOR_GEARSET_18, false, MOTOR_ENCODER_DEGREES);

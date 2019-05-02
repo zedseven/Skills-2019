@@ -14,5 +14,7 @@ void drawAllSnapshotObjects(int objectCount, pros::vision_object_s_t *objects, l
 int calibrateVisionExposure(pros::Vision vision, int signature, pros::vision_object_s_t *objects);
 void setBlockVisionExposure(BlockType blockType);
 void setFloorVisionExposure(BlockType blockType);
+void setBlockVisionWhiteBalance(BlockType blockType);
+void setFloorVisionWhiteBalance(BlockType blockType);
 pros::vision_object_s_t getLargestObject(int objectCount, pros::vision_object_s_t *objects);
 int takeSnapshot(pros::Vision vision, int signature, pros::vision_object_s_t *objects);

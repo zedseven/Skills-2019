@@ -1,7 +1,7 @@
 #pragma once
 
 //High-level Configuration
-#define LAYOUT_NUM 6
+#define LAYOUT_NUM 6 /* If you change this value go to "PROS -> Build -> All" then plug into brain and click the lightning bolt. */
 #define TEST_MODE 0
 #define BLUE_BLOCK_LAMP_ON 1
 #define YELLOW_BLOCK_LAMP_ON 0
@@ -95,13 +95,21 @@ enum class MovementType { None, Left, Right, Forward, Backward };
 #define VISION_OUTLIER_SENSITIVITY 40
 #define VISION_SNAPSHOT_MIN_AREA 400
 
+//Vision Sensor White Balance Settings
+#define VISION_BLUE_BLOCK_WHITE_BALANCE 0xc40900
+#define VISION_YELLOW_BLOCK_WHITE_BALANCE 0xc40900
+#define VISION_RED_BLOCK_WHITE_BALANCE 0xc40900
+#define VISION_BLUE_FLOOR_WHITE_BALANCE 0xc40900
+#define VISION_YELLOW_FLOOR_WHITE_BALANCE 0xc40900
+#define VISION_RED_FLOOR_WHITE_BALANCE 0xc40900
+
 //Vision Sensor Exposure Settings
 #define VISION_BLUE_BLOCK_EXPOSURE 30
 #define VISION_YELLOW_BLOCK_EXPOSURE 60
 #define VISION_RED_BLOCK_EXPOSURE 40/*70*//*110*//*94*/
-#define VISION_BLUE_FLOOR_EXPOSURE 60
+#define VISION_BLUE_FLOOR_EXPOSURE 55
 #define VISION_YELLOW_FLOOR_EXPOSURE 60
-#define VISION_RED_FLOOR_EXPOSURE 44
+#define VISION_RED_FLOOR_EXPOSURE 60
 
 //Vision Sensor Signature Constants
 #define SIG_BLUE_BLOCK 1
@@ -115,6 +123,6 @@ enum class MovementType { None, Left, Right, Forward, Backward };
 #define SIG_INIT_BLUE_BLOCK BlockVision.signature_from_utility(SIG_BLUE_BLOCK, -3147, -2063, -2605, 9375, 13871, 11623, 4, 0)
 #define SIG_INIT_YELLOW_BLOCK BlockVision.signature_from_utility(SIG_YELLOW_BLOCK, -159, 223, 32, -4097, -3665, -3882, 5.9, 0)
 #define SIG_INIT_RED_BLOCK BlockVision.signature_from_utility(SIG_RED_BLOCK, 7013, 7607, 7310, -1371, -971, -1171, 5.6, 0)
-#define SIG_INIT_BLUE_FLOOR FloorVision.signature_from_utility(SIG_BLUE_FLOOR, -4161, -3537, -3849, 5745, 6709, 6227, 10, 0)
-#define SIG_INIT_YELLOW_FLOOR FloorVision.signature_from_utility(SIG_YELLOW_FLOOR, 773, 1463, 1118, -4113, -3763, -3938, 7, 0)
-#define SIG_INIT_RED_FLOOR FloorVision.signature_from_utility(SIG_RED_FLOOR, 8057, 9309, 8683, -1365, -881, -1123, 9, 0)
+#define SIG_INIT_BLUE_FLOOR FloorVision.signature_from_utility(SIG_BLUE_FLOOR, -4449, -3205, -3828, 5841, 7317, 6580, 7.699999809265137, 0)
+#define SIG_INIT_YELLOW_FLOOR FloorVision.signature_from_utility(SIG_YELLOW_FLOOR, 1287, 2331, 1808, -3967, -3249, -3608, 5.5, 0)
+#define SIG_INIT_RED_FLOOR FloorVision.signature_from_utility(SIG_RED_FLOOR, 9007, 9615, 9311, -1311, -953, -1132, 9, 0)

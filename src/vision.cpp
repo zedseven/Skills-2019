@@ -24,7 +24,8 @@ void initSignatures()
   FloorVision.set_signature(SIG_BLUE_FLOOR, &blueFloorSig);
   FloorVision.set_signature(SIG_YELLOW_FLOOR, &yellowFloorSig);
   FloorVision.set_signature(SIG_RED_FLOOR, &redFloorSig);
-  printf("Initialized the vision sensors. Exposure values: BlockVision: %d | FloorVision: %d\n", BlockVision.get_exposure(), FloorVision.get_exposure());
+
+  printf("Initialized the vision sensors. Exposure values: BlockVision: %d | FloorVision: %d White Balances: BlockVision: %#06x | FloorVision: %#06x\n", BlockVision.get_exposure(), FloorVision.get_exposure(), BlockVision.get_white_balance(), FloorVision.get_white_balance());
 }
 
 double getDistFromObjWidth(int objWidth)
@@ -191,6 +192,42 @@ void setFloorVisionExposure(BlockType blockType)
           break;
       case BlockType::Red:
           FloorVision.set_exposure(VISION_RED_FLOOR_EXPOSURE);
+          break;
+      default:
+          return; //BlockType::None has no exposure setting
+  }
+}
+
+void setBlockVisionWhiteBalance(BlockType blockType)
+{
+  switch(blockType)
+  {
+      case BlockType::Blue:
+          BlockVision.set_white_balance(VISION_BLUE_BLOCK_WHITE_BALANCE);
+          break;
+      case BlockType::Yellow:
+          BlockVision.set_white_balance(VISION_YELLOW_BLOCK_WHITE_BALANCE);
+          break;
+      case BlockType::Red:
+          BlockVision.set_white_balance(VISION_RED_BLOCK_WHITE_BALANCE);
+          break;
+      default:
+          return; //BlockType::None has no exposure setting
+  }
+}
+
+void setFloorVisionWhiteBalance(BlockType blockType)
+{
+  switch(blockType)
+  {
+      case BlockType::Blue:
+          FloorVision.set_white_balance(VISION_BLUE_FLOOR_WHITE_BALANCE);
+          break;
+      case BlockType::Yellow:
+          FloorVision.set_white_balance(VISION_YELLOW_FLOOR_WHITE_BALANCE);
+          break;
+      case BlockType::Red:
+          FloorVision.set_white_balance(VISION_RED_FLOOR_WHITE_BALANCE);
           break;
       default:
           return; //BlockType::None has no exposure setting
