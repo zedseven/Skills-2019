@@ -112,7 +112,7 @@ void layout6()
   findBlock();
   move(-25);
   rotate(90);
-  move(42);
+  move(37);
   rotate(-90);
   //move(25);
   //realign();
@@ -122,7 +122,7 @@ void layout6()
   move(60);
   moveUntilDist(119, 50);
   rotate(-90);
-  move(50);
+  move(40);
   findPad();
   move(-110);
   //Yellow Block B
