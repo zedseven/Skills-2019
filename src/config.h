@@ -1,7 +1,7 @@
 #pragma once
 
 //High-level Configuration
-#define LAYOUT_NUM 3 /* If you change this value go to "PROS -> Build -> All" then plug into brain and click the lightning bolt. */
+#define LAYOUT_NUM 4 /* If you change this value go to "PROS -> Build -> All" then plug into brain and click the lightning bolt. */
 #define TEST_MODE 0
 #define BLUE_BLOCK_LAMP_ON 1
 #define YELLOW_BLOCK_LAMP_ON 0

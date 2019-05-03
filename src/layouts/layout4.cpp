@@ -80,7 +80,7 @@ void layout4()
   rotate(-90);
   move(50);
   rotate(90);
-  moveUntilDist(115, 50);
+  moveUntilDist(113, 50);
   rotate(-90);
   move(40);
   findBlock();
@@ -96,15 +96,16 @@ void layout4()
   move(-30);
   //Red Block A
   targetBlock = BlockType::Red;
-  rotate(180);
-  move(10);
+  //rotate(180);
+  //move(10);
   //moveUntilDist(40, 50);
-  rotate(90);
+  //rotate(90);
+  rotate(-90);
   moveUntilDist(60, 50);
   rotate(-90);
-  move(70);
+  move(80);
   rotate(90);
-  moveUntilDist(40, 50);
+  moveUntilDist(41, 50);
   rotate(-90);
   move(50);
   findBlock();
@@ -134,7 +135,12 @@ void layout4()
   rotate(90);
   move(-70);
   rotate(90);
-  moveUntilDist(60, 50);
+  //moveUntilDist(60, 50);
+  moveUntilDist(70, 50);
+  rotate(90);
+  moveUntilDist(58, 20);
+  rotate(-90);
+  move(15);
   rotate(45);
   findPad();
 }
