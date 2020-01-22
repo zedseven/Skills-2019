@@ -9,6 +9,8 @@ The problem spec is [here](http://www.skillsontario.com/index.php?p=download&fil
 
 A small YouTube playlist of the robot in action can be found [here](https://www.youtube.com/playlist?list=PL9REoHUm0qaRCxy_Rc48nk-ZyXC9P70KE).
 
+The `media/` directory just contains videos that aren't contained in the playlist above.
+
 ## Code
 The file `old.cpp` is a copy of the old VCS file, `main.cpp`.
 
