@@ -7,6 +7,8 @@ For this competition we used [VEX Robotics V5](https://www.vexrobotics.com/vexed
 
 The problem spec is [here](http://www.skillsontario.com/index.php?p=download&file=936).
 
+A small YouTube playlist of the robot in action can be found [here](https://www.youtube.com/playlist?list=PL9REoHUm0qaRCxy_Rc48nk-ZyXC9P70KE).
+
 ## Code
 The file `old.cpp` is a copy of the old VCS file, `main.cpp`.
 
